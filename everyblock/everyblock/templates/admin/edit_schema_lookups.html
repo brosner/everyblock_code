@@ -1,0 +1,33 @@
+{% extends "admin/base.html" %}
+
+{% load eb %}
+
+{% block title %}Edit schema lookups: {{ schema.plural_name|capfirst }} | {{ schema_field.name|capfirst }}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<p><a href="../../../../">{% METRO_NAME %} admin</a> / <a href="../../../">Schemas</a></p>
+
+	<h1>Edit lookups: {{ schema.plural_name|capfirst }} / {{ schema_field.name|capfirst }}</h1>
+
+	<form action="" method="post">
+		<table>
+			<thead>
+			<tr><th>Code</th><th>Name</th><th>Description</th></tr>
+			</thead>
+			<tbody>
+			{% for row in form|bunch:"2" %}
+				<tr>
+					<td>{{ row.0.field.lookup_obj.code }}</td>
+					{% for field in row %}
+					<td>{% if field.errors %}{{ field.errors }}{% endif %}{{ field }}</td>
+					{% endfor %}
+				</tr>
+			{% endfor %}
+			<tr class="submit-row"><th>&nbsp;</th><td><input class="button default" type="submit" value="Submit" /></td></tr>
+			</tbody>
+		</table>
+	</form>
+</div><!--/content-->
+
+{% endblock %}

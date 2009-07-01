@@ -1,0 +1,31 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}People person status for data feeds{% endblock %}
+
+{% block content %}
+
+<h1><a href="../">Data feeds</a> / People person status</h1>
+
+<img src="http://farm2.static.flickr.com/1378/1010524757_22efe161d2_m.jpg" align="right" />
+
+<p>See also: <a href="../tech_status/">Tech status</a>
+<table>
+    <thead>
+        <tr>
+            <th>PP status</th>
+            <th>City</th>
+            <th>Data type</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for source in source_list %}
+        <tr{% if source.is_na %} style="background: #eee;"{% endif %}>
+            <td>{% ifchanged %}<strong>{{ source.get_pp_status_display }}</strong>{% endifchanged %}</td>
+            <td><a href="{{ source.city.url }}">{{ source.city.name }}</a></td>
+            <td><a href="{{ source.url }}">{{ source.data_type.name }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

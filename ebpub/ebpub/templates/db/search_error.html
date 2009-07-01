@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load eb %}
+
+{% block title %}Search: {{ query }}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h1>Location not found</h1>
+	<p>No results for <strong>{{ query }}</strong></p>
+	<h3>Here are some things you might want to try&hellip;</h3>
+	<ul>
+		<li>Navigate our <a href="/streets/">full list of streets</a> to find news for an individual block.</li>
+		<li>Find a {% for locationtype in locationtype_list %}{% if forloop.last %} or {% endif %}<a href="{{ locationtype.url }}">{{ locationtype.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}.</li>
+	</ul>
+	<h3>Or try another address search in {% METRO_NAME %}&hellip;</h3>
+	<form action="/search/" method="get">
+		<p><input type="text" name="q" value="{{ query }}"> <input type="submit" value="Search again"></p>
+	</form>
+</div><!--/ #content-->
+{% endblock %}

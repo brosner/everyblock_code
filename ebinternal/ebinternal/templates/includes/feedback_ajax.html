@@ -1,0 +1,45 @@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript">
+var $j = jQuery.noConflict();
+function ignore_feedback(feedback_id, success_callback, button) {
+	var button = $j(button);
+	button.html('Ignoring...').attr('disabled', 'disabled');
+	$j.ajax({
+		type: 'POST', url: '/feedback/ignore/', data: {feedback_id: feedback_id},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			alert('The server farted.');
+		},
+		success: function(data, textStatus) {
+			button.removeAttr('disabled');
+			success_callback(feedback_id);
+		}
+	});
+}
+$j(function() {
+	$j('.category').click(function(event) {
+		var el = $j(this);
+		el.hide().parent().find('.form').show();
+		el.parent().find('select').val(el.parent().find('.val').text()).focus();
+	});
+	$j('.cat-change').click(function(event) {
+		var el = $j(this);
+		var div = el.parent().parent();
+		var feedback_id = div.attr('id').split('cat')[1];
+		var cat_id = div.find('select').val();
+		var cat_label = div.find('option:selected').text();
+		if (cat_id) {
+			$j.ajax({
+				type: "POST", url: "/feedback/change-category/", data: {feedback_id:feedback_id, category_id:cat_id},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+					alert('The server farted.');
+				},
+				success: function(data, textStatus) {
+					div.find('.category').html(cat_label).show();
+					div.find('.val').html(cat_id);
+					el.parent().hide();
+				}
+			});
+		}
+	});
+});
+</script>

@@ -1,0 +1,1 @@
+ALTER TABLE db_attribute ALTER COLUMN schema_id SET STATISTICS 5;

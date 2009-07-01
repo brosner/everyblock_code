@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load eb %}
+
+{% block title %}About {{ schema.plural_name }}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<p>
+		<a href="../">{{ schema.plural_name|capfirst }}</a>
+	</p>
+	<h1>About {{ schema.plural_name }}</h1>
+	<h2>Summary</h2>
+	{{ schemainfo.summary|safe|linebreaks }}
+
+	{% if schemainfo.source %}
+		<h2>Source</h2>
+		{{ schemainfo.source|safe|linebreaks }}
+	{% endif %}
+
+	{% if schemainfo.grab_bag_headline and schemainfo.grab_bag %}
+		<h2>{{ schemainfo.grab_bag_headline|safe }}</h2>
+		{{ schemainfo.grab_bag|safe|linebreaks }}
+	{% endif %}
+
+	<p><a href="../">Back to {{ schema.plural_name }}</a></p>
+</div><!--/content-->
+{% endblock %}

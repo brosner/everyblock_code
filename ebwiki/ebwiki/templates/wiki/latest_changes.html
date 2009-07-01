@@ -1,0 +1,36 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}Latest changes{% endblock %}
+
+{% block content %}
+
+<h1>Latest changes</h1>
+
+<p>{% if result_page.has_previous %}<a href="?p={{ result_page.previous_page_number }}">Previous</a>{% else %}Previous{% endif %} | {% if result_page.has_next %}<a href="?p={{ result_page.next_page_number }}">Next</a>{% else %}Next{% endif %}</p>
+
+<table class="history latest-changes">
+	<thead>
+		<tr>
+			<th>Page</th>
+			<th>Revision</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for page in result_page.object_list %}
+		<tr>
+			<td class="page">
+				<a href="{{ page.url }}">{{ page.headline }}</a>
+			</td>
+			<td class="revision">
+				<a class="version button default" href="{{ page.version_url }}">{{ page.version }}</a> <a class="diff button" href="{{ page.diff_url }}">Changes</a>
+				<p class="info">Updated by <span class="user">{{ page.change_user }}</span> <span class="time">{% if page.change_date|timesince %}{{ page.change_date|timesince }} ago{% else %}just now{% endif %}</span></p>
+				<p class="message">{{ page.change_message|escape }}</p>
+			</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+<p>{% if result_page.has_previous %}<a href="?p={{ result_page.previous_page_number }}">Previous</a>{% else %}Previous{% endif %} | {% if result_page.has_next %}<a href="?p={{ result_page.next_page_number }}">Next</a>{% else %}Next{% endif %}</p>
+
+{% endblock %}

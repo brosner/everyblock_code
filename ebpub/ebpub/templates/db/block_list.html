@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load eb %}
+
+{% block title %}{{ first_block.street_pretty_name }}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<p>
+		<a href="/streets/">Streets</a>
+		{% if city %} / <a href="../">{{ city.name }}</a>{% endif %}
+	</p>
+	<h1>{{ first_block.street_pretty_name }}</h1>
+	{% regroup block_list by postdir as postdir_list %}
+	{% for postdir in postdir_list %}
+		{% regroup postdir.list by predir as predir_list %}
+		{% for predir in predir_list %}
+			<h2>{{ predir.grouper }}{% if predir.grouper %}. {% endif %}{{ first_block.street_pretty_name }}{% if postdir.grouper %} {{ postdir.grouper }}{% endif %}</h2>
+			{% for block_bunch in predir.list|bunchlong:"4" %}
+				<ul>
+					{% for block in block_bunch %}
+					<li><a href="{{ block.url }}">{{ block.from_num }}-{{ block.to_num }} {{ block.predir }}</a></li>
+					{% endfor %}
+				</ul>
+			{% endfor %}
+		{% endfor %}
+	{% endfor %}
+</div>
+{% endblock %}

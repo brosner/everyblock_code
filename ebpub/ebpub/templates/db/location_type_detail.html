@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% load eb %}
+
+{% block title %}{% METRO_NAME %} {{ location_type.plural_name }}{% endblock %}
+
+{% block extrahead %}
+<style type="text/css" media="screen">
+	.locationlist li { overflow: hidden; }
+	.locationlist a { float: left; clear: left; }
+	.summary { margin-left: 16px; margin-right: 16px; }
+</style>
+<meta name="description" content="List of {{ location_type.plural_name }} in {% METRO_NAME %}, with recent news for each one.">
+{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h1>{% METRO_NAME %} {{ location_type.plural_name }}</h1>
+	<ul>
+		{% for type in location_type_list %}
+			<li>{% if type.is_current %}<strong class="current">{{ type.location_type.plural_name|capfirst }}</strong>{% else %}<a href="{{ type.location_type.url }}">{{ type.location_type.plural_name|capfirst }}</a>{% endif %}</li>
+		{% endfor %}
+	</ul>
+	<p>Choose a {{ location_type.name }} to see recent news in that area. You can also <a href="/streets/">browse by street</a> to find an individual block.</p>
+	{% ifequal location_type.plural_name "cities" %}
+		<ul>
+			{% for location in location_list %}
+			<li><a href="{{ location.slug }}/">{{ location.name }}</a></li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		{% regroup location_list by city as city_list %}
+		{% for city in city_list %}
+			{% if city_list|length|greaterthan:"1" %}<h2>{{ city.grouper.title }}</h2>{% endif %}
+			<ul>
+				{% for location in city.list %}
+				<li><a href="{{ location.slug }}/">{{ location.name }}</a></li>
+				{% endfor %}
+			</ul>
+		{% endfor %}
+	{% endifequal %}
+</div><!--/content-->
+{% endblock %}

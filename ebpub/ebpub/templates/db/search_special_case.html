@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% load eb %}
+
+{% block title %}{{ special_case.title }}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h1>{{ special_case.title }}</h1>
+	{{ special_case.body|safe }}
+</div><!--/ #content-->
+{% endblock %}

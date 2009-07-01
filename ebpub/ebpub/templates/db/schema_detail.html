@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% load eb humanize %}
+
+{% block title %}{% METRO_NAME %} {{ schema.plural_name }}{% endblock %}
+
+{% block extrahead %}
+<meta name="description" content="{% if schemainfo.short_description %}{{ schemainfo.short_description }}{% else %}{{ schema.plural_name|capfirst }} in {% METRO_NAME %}.{% endif %}{% if schemainfo.update_frequency %} Updated {{ schemainfo.update_frequency|lower }}.{% endif %}">
+{% endblock %}
+
+{% block content %}
+	<div id="content">
+		<h1>{{ schema.plural_name|capfirst }}</h1>
+		{% if schemainfo %}<p>{{ schemainfo.short_description }}</p>{% endif %}
+		<h2>About this section</h2>
+		<dl>
+			<dt>Source</dt>
+			<dd>{{ schemainfo.short_source|default:"–" }}</dd>
+			<dt>Updated</dt>
+			<dd>{{ schemainfo.update_frequency|default:"–" }}</dd>
+		</dl>
+		<p><a href="about/">More about this section&hellip;</a></p>
+		{% if schema.allow_charting %}
+			{% with "filter/" as search_url %}
+			{% include "db/snippets/filter_left_nav.html" %}
+			{% endwith %}
+		{% endif %}
+		{% if schema.allow_charting %}
+			{% if date_chart %}
+				<div id="date-chart">
+					{% with date_chart.dates|first as first_date %}
+						{% with date_chart.dates|last as last_date %}
+							<h2>{{ first_date.date|date:"N j, Y" }} – {{ last_date.date|date:"N j, Y" }}</h2>
+						{% endwith %}
+					{% endwith %}
+					<h3><strong>{{ date_chart.total_count|intcomma }}</strong> {% schema_plural_name schema date_chart.total_count %}</h3>
+					{% include "db/snippets/date_chart.html" %}
+				</div><!--/ #date-chart -->
+			{% endif %}
+			{% for location_chart in location_chartfield_list %}
+				<div id="location-{{ location_chart.location_type.slug }}">
+					<h2>By {{ location_chart.location_type.name }}</h2>
+					<table>
+						{% for location in location_chart.locations %}
+							<tr>
+								<td class="label">
+									<span class="name">
+										<a href="locations/{{ location_chart.location_type.slug }}/{{ location.location.slug }}/">{{ location.location.name }}</a>
+										<span class="bar" style="width: {% widthratio location.total date_chart.total_count 100 %}%"></span>
+									</span>
+								</td>
+								<td class="count">
+									{{ location.total|intcomma }}
+								</td>
+								<td class="percent">
+									{% widthratio location.total date_chart.total_count 100 %}%
+								</td>
+							</tr>
+						{% endfor %}
+						<tr class="ungeocoded">
+							<td class="label">
+								<span class="name">
+									Unknown
+									<span class="bar" style="width: {% widthratio location_chart.unknown date_chart.total_count 100 %}%"></span>
+								</span>
+							</td>
+							<td class="count">
+								{{ location_chart.unknown|intcomma }}
+							</td>
+							<td class="percent">
+								{% widthratio location_chart.unknown date_chart.total_count 100 %}%
+							</td>
+						</tr>
+						{% if not location_chart.locations|length|lessthan:9 %}
+							<tr>
+								<td colspan="3">
+									<a href="locations/{{ location_chart.location_type.slug }}/">See all {{ location_chart.location_type.plural_name }}&hellip;</a>
+								</td>
+							</tr>
+						{% endif %}
+					</table>
+				</div><!--/ #location-{{ location_chart.location_type.slug }} -->
+			{% endfor %}
+			{% for lookup in lookup_list %}
+				<div id="lookup-{{ lookup.sf.slug }}">
+					<h2>By {{ lookup.sf.pretty_name }}</h2>
+					<table>
+						{% for value in lookup.top_values %}
+						<tr>
+							<td class="label">
+								<span class="name">
+									<a href="by-{{ lookup.sf.slug }}/{{ value.lookup.slug }}/" title="{{ value.lookup.name }}">{{ value.lookup.name }}</a>
+									{% if value.total %}<span class="bar" style="width: {% widthratio value.total date_chart.total_count 100 %}%"></span>{% endif %}
+								</span>
+							</td>
+							<td class="count">
+								{{ value.total|intcomma }}
+							</td>
+							<td class="percent">
+								{% widthratio value.total date_chart.total_count 100 %}%
+							</td>
+						</tr>
+						{% endfor %}
+						<tr>
+							<td colspan="3">
+								<a href="by-{{ lookup.sf.slug }}/">See all {{ lookup.sf.pretty_name_plural }}&hellip;</a>
+							</td>
+						</tr>
+					</table>
+					{% if lookup.sf.is_many_to_many_lookup %}<p>Percentages may add up to more than 100 because {{ schema.plural_name }} may have multiple {{ lookup.sf.pretty_name_plural }}.</p>{% endif %}
+				</div><!--/ #lookup-{{ lookup.sf.slug }} -->
+			{% endfor %}
+		{% else %}
+			{# If schema is uncharted, show a list of most recent items instead #}
+			{% if newsitem_list %}
+				<div id="latest-items">
+					<h2>Most recent {{ schema.plural_name }}</h2>
+					<ul>
+						{% newsitem_list_by_schema newsitem_list ungrouped %}
+					</ul>
+				</div><!--/ #latest-items -->
+			{% endif %}
+		{% endif %}
+	</div><!--/ #content -->
+{% endblock %}

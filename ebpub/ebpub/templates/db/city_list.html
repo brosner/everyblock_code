@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Streets{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h1>Streets</h1>
+	<ul>
+	{% for city in city_list %}
+	<li><a href="{{ city.slug }}/">{{ city.name }}</a></li>
+	{% endfor %}
+	</ul>
+</div>
+{% endblock %}

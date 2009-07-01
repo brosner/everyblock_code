@@ -1,0 +1,36 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}{% if old_page %}Edit {{ old_page.slug }}{% else %}Create {{ slug }}{% endif %}{% endblock %}
+
+{% block extrahead %}
+<style type="text/css" media="screen">
+	th label { display: block; padding: 0.6em 0; white-space: nowrap; }
+	#id_content { line-height: 1.6em; }
+	#id_headline,
+	#id_content,
+	#id_change_message { width: 98%; color: #222; font: 1em Arial, sans-serif; padding: 0.6em 9px; border: 1px solid #ccc; }
+	#id_headline { font-weight: bold; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% if old_page %}
+<h1>Edit <a href="{{ old_page.url }}">{{ old_page.slug }}</a></h1>
+{% else %}
+<h1>Create {{ slug }}</h1>
+{% endif %}
+
+<form action="" method="post">
+	<table>
+		{{ form.as_table }}
+		<tr class="submit-row"><th>&nbsp;</th><td><input class="button default" type="submit" value="Submit" /></td></tr>
+	</table>
+</form>
+
+<h3>Markdown key</h3>
+<table>
+	<tr><td><code>[Link to URL](http://www.example.com/)</code></td><td><a href="http://www.example.com/">Link to URL</a></td></tr>
+	<tr><td><code>[Link to wiki page](hello)</code></td><td><a href="/hello/">Link to wiki page</a></td></tr>
+</table>
+{% endblock %}

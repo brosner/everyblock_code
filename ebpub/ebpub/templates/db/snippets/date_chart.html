@@ -1,0 +1,61 @@
+{# This snippet requires these variables: date_chart, schema, filter_url #}
+
+{% load eb dateutils humanize %}
+
+<style type="text/css" media="screen">
+	/* Basic styles for date charts. For more on creating CSS charts, see: http://www.alistapart.com/articles/accessibledatavisualization/ */
+	.datechart .index { display: block; position: relative; height: 100px; text-decoration: none; }
+	.datechart .bar { background: grey; width: 100%; display: block; position: absolute; bottom: 0; text-indent: -9999px; overflow: hidden; }
+	.datechart .day { width: 1.25em; }
+</style>
+
+<p>Peak of this chart: {{ date_chart.max_count|intcomma }} {% schema_plural_name schema date_chart.max_count %}</p>
+
+{% regroup date_chart.dates by date|date:"F" as dates_by_month %}
+<table class="datechart">
+	<tr>
+		{% for date in date_chart.dates %}
+			<td class="day">
+				<a href="{{ schema.url }}{{ filter_url }}by-date/{{ date.date.year }}-{{ date.date.month }}-{{ date.date.day }},{{ date.date.year }}-{{ date.date.month }}-{{ date.date.day }}/" class="index" title="{{ date.date|date:"l, F j, Y" }}: {{ date.count|intcomma }} {% schema_plural_name schema date.count %}">
+					{% if date.count %}
+						<span class="bar" style="height: {% widthratio date.count date_chart.max_count 100 %}%">{{ date.count }}</span>
+					{% else %}
+						&nbsp;
+					{% endif %}
+				</a>
+			</td>
+		{% endfor %}
+	</tr>
+	<tr>
+		{% for date in date_chart.dates %}
+			<th scope="col" axis="day">
+				{% if date.count %}
+					<a href="{{ schema.url }}{{ filter_url }}by-date/{{ date.date.year }}-{{ date.date.month }}-{{ date.date.day }},{{ date.date.year }}-{{ date.date.month }}-{{ date.date.day }}/" title="{{ date.date|date:"l, F j, Y" }}: {{ date.count|intcomma }} {% schema_plural_name schema date.count %}">
+						<strong class="label">{{ date.date.day }}</strong>
+					</a>
+				{% else %}
+				  <strong class="label">{{ date.date.day }}</strong>
+				{% endif %}
+			</th>
+		{% endfor %}
+	</tr>
+	<tr>
+		{% for month in dates_by_month %}
+			<th class="monthlabel" colspan="{{ month.list|length }}" scope="col" axis="month">
+				{% if forloop.first and month.list|length|lessthan:"4" %}
+					{# Don't display month name, because there's not enough space. #}
+				{% else %}
+					<a href="{{ schema.url }}{{ filter_url }}by-date/{{ month.list.0.date.year }}-{{ month.list.0.date.month }}-1,{{ month.list.0.date.year }}-{{ month.list.0.date.month }}-{{ month.list.0.date|days_in_month }}/">
+					{% if forloop.last and month.list|length|lessthan:"4" %}
+						{# Display abbreviated month name #}
+						{{ month.list.0.date|date:"N" }}
+					{% else %}
+						{# Display full month name #}
+						{{ month.list.0.date|date:"N Y" }}
+					{% endif %}
+					</a>
+				{% endif %}
+			</th>
+		{% endfor %}
+	</tr>
+</table>

@@ -1,0 +1,23 @@
+{% extends "wiki/base.html" %}
+
+{% load wiki %}
+
+{% block title %}{{ page.headline|escape }}{% endblock %}
+
+{% block content %}
+
+<h1>{{ page.headline|escape }}</h1>
+
+{{ page.content|markdown|safe }}
+
+{% endblock %}
+
+{% block footer %}
+<div id="footer">
+	<p class="page-tools">
+		<a class="button default" href="{{ page.edit_url }}">Edit</a>
+		<a class="button" href="{{ page.history_url }}">View history</a>
+		<span class="timestamp"><a href="{{ page.diff_url }}">Last updated</a> by <span class="user">{{ page.change_user }}</span> {% if page.change_date|timesince %}{{ page.change_date|timesince }} ago{% else %}just now{% endif %}.</span>
+	</p>
+</div><!--/footer-->
+{% endblock %}

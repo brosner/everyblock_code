@@ -1,0 +1,34 @@
+{% extends "wiki/base.html" %}
+
+{% load wiki %}
+
+{% block title %}Search the wiki{% endblock %}
+
+{% block content %}
+
+<h1>Search the wiki</h1>
+
+<form method="get">
+<input type="text" name="query" value="{{ query|escape }}">
+<input type="submit" value="Search">
+</form>
+
+{% if error %}
+<p class="error">
+There was an error:
+<pre>{{ error }}</pre>
+</p>
+{% endif %}
+
+{% if results %}
+<p>Found {{ total }} result{{ total|pluralize }}.</p>
+{% for page in results %}
+<p><b><a href="{{ page.url }}">{{ page.headline }}</a></b>
+</p>
+<p>
+{{ page.content|markdown|striptags|truncatewords:20 }}
+</p>
+{% endfor %}
+{% endif %}
+
+{% endblock %}

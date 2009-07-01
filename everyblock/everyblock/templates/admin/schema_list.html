@@ -1,0 +1,31 @@
+{% extends "admin/base.html" %}
+
+{% load eb %}
+
+{% block title %}Schemas{% endblock %}
+
+{% block content %}
+<div id="content">
+	<p><a href="../">{% METRO_NAME %} admin</a></p>
+
+	<h1>Schemas</h1>
+
+	<table>
+	{% for schema in schema_list %}
+		<tr>
+			<th><a href="{{ schema.schema.id }}/">{{ schema.schema.plural_name|capfirst }}</a></th>
+			<td>
+			{% if schema.lookups %}
+				<ul>
+				{% for lookup in schema.lookups %}
+				<li><a href="{{ schema.schema.id }}/lookups/{{ lookup.id }}/">{{ lookup.pretty_name_plural|capfirst }}</a></li>
+				{% endfor %}
+				</ul>
+			{% endif %}
+			</td>
+		</tr>
+	{% endfor %}
+	</table>
+
+</div><!--/content-->
+{% endblock %}

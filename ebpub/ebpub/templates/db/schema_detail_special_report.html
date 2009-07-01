@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load eb mapping %}
+
+{% block title %}Special report: {{ schema.plural_name|capfirst }}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h1>Special report: {{ schema.plural_name|capfirst }}</h1>
+	{% if schemainfo %}<p>{{ schemainfo.short_description }}</p>{% endif %}
+	{{ schemainfo.summary|safe|linebreaks }}
+	{% if schema.allow_charting %}
+		<h3>Browse</h3>
+		<ul>
+			{% for schemafield in schemafield_list %}
+			<li><a href="by-{{ schemafield.slug }}/">By {{ schemafield.browse_by_title }}</a></li>
+			{% endfor %}
+			{% for locationtype in browsable_locationtype_list %}
+			<li><a href="locations/{{ locationtype.slug }}/">By {{ locationtype.name }}</a></li> 
+			{% endfor %}
+		</ul>
+	{% endif %}
+	<h2>Full list of items</h2>
+	<ul>
+		{% newsitem_list_by_schema newsitem_list ungrouped %}
+	</ul>
+</div><!--/content-->
+{% endblock %}
+

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block title %}City poll{% endblock %}
+
+{% block content %}
+<p class="breadcrumb"><a href="../">Internal</a></p>
+
+<h1>City poll</h1>
+
+<table>
+	<tr>
+		<th>City</th>
+		<th>Votes</th>
+	</tr>
+	{% for city in city_list %}
+	<tr>
+		<td><a href="{{ city.url }}">{{ city.pretty_name }}</a></td>
+		<td>{{ city.votes }}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}

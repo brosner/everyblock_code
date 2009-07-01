@@ -1,0 +1,132 @@
+# a schema with every type of schema field to use in tests
+
+- pk: 1000
+  model: db.schema
+  fields:
+    plural_name: test schema items
+    last_updated: 2007-12-10
+    name: test schema item
+    has_newsitem_detail: true
+    importance: 10
+    uses_attributes_in_list: false
+    min_date: 2007-10-09
+    allow_charting: true
+    can_collapse: false
+    date_name: publication date
+    indefinite_article: a
+    is_public: true
+    slug: test-schema
+    date_name_plural: publication dates
+    is_special_report: false
+
+# varchar
+- pk: 1000
+  model: db.schemafield
+  fields:
+    is_lookup: false
+    pretty_name_plural: varchar
+    is_charted: true
+    name: varchar
+    display_order: 1
+    is_searchable: false
+    real_name: varchar01
+    pretty_name: varchat
+    is_filter: true
+    display: true
+    schema: 1000
+
+# date
+- pk: 1001
+  model: db.schemafield
+  fields:
+    is_lookup: false
+    pretty_name_plural: date
+    is_charted: false
+    name: date
+    display_order: 0
+    is_searchable: false
+    real_name: date01
+    pretty_name: date
+    is_filter: false
+    display: false
+    schema: 1000
+
+# time
+- pk: 1002
+  model: db.schemafield
+  fields:
+    is_lookup: false
+    pretty_name_plural: time
+    is_charted: false
+    name: time
+    display_order: 0
+    is_searchable: false
+    real_name: time01
+    pretty_name: time
+    is_filter: false
+    display: false
+    schema: 1000
+
+# datetime
+- pk: 1003
+  model: db.schemafield
+  fields:
+    is_lookup: false
+    pretty_name_plural: datetime
+    is_charted: false
+    name: datetime
+    display_order: 0
+    is_searchable: false
+    real_name: datetime01
+    pretty_name: datetime
+    is_filter: false
+    display: false
+    schema: 1000
+
+# bool
+- pk: 1004
+  model: db.schemafield
+  fields:
+    is_lookup: false
+    pretty_name_plural: bool
+    is_charted: false
+    name: bool
+    display_order: 0
+    is_searchable: false
+    real_name: bool01
+    pretty_name: bool
+    is_filter: false
+    display: false
+    schema: 1000
+
+# int
+- pk: 1005
+  model: db.schemafield
+  fields:
+    is_lookup: false
+    pretty_name_plural: int
+    is_charted: false
+    name: int
+    display_order: 0
+    is_searchable: false
+    real_name: int01
+    pretty_name: int
+    is_filter: false
+    display: false
+    schema: 1000
+
+# lookup
+- pk: 1006
+  model: db.schemafield
+  fields:
+    is_lookup: false
+    pretty_name_plural: lookup
+    is_charted: false
+    name: lookup
+    display_order: 0
+    is_searchable: false
+    real_name: int02
+    pretty_name: lookup
+    is_filter: false
+    display: false
+    schema: 1000

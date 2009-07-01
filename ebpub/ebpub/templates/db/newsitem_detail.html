@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% load eb humanize mapping %}
+
+{% block title %}{{ newsitem.title }} | {{ newsitem.schema.plural_name|capfirst }}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<p>
+		<a href="{{ newsitem.schema.url }}">{% if newsitem.schema.is_special_report %}Special report: {% endif %}{{ newsitem.schema.plural_name|capfirst }}</a>
+	</p>
+	<h1>{{ newsitem.title }}</h1>
+	{% block newsitem_detail_summary %}{% endblock %}
+
+	{% if not newsitem.schema.is_special_report %}<h2>{{ newsitem.schema.name|capfirst }} details</h2>{% endif %}
+	<table>
+		<tr>
+			<th>Location</th>
+			{% with newsitem.location_url as location_url %}
+				<td>
+					{% if location_url %}<a href="{{ location_url }}">{% endif %}{{ newsitem.location_name }}{% if location_url %}</a>{% endif %}
+					{% if not newsitem.location %}<p>This location couldn't be mapped.</p>{% endif %}
+				</td>
+			{% endwith %}
+		</tr>
+		{% block newsitem_detail_date %}
+			<tr>
+				<th>{{ newsitem.schema.date_name|capfirst }}</th>
+				<td><a href="{{ newsitem.item_date_url }}">{{ newsitem.item_date|date:"F j, Y" }}</a></td>
+			</tr>
+		{% endblock %}
+		{% block newsitem_detail_attribute_list %}
+			{% for attribute in attribute_list %}
+				<tr>
+					<th>
+						{{ attribute.sf.smart_pretty_name|capfirst }}
+					</th>
+					<td>
+						{% if attribute.value_list %}
+						{% for value in attribute.value_list %}
+							{% if value.url %}
+								<a href="{{ value.url }}">{{ value.value }}</a>
+							{% else %}
+								{{ value.value }}
+							{% endif %}
+							{% if value.description %}<p>{{ value.description|safe }}</p>{% endif %}
+							{% if not forloop.last %}{% if not value.description %}<br>{% endif %}{% endif %}
+						{% endfor %}
+						{% else %}
+						None
+						{% endif %}
+					</td>
+				</tr>
+			{% endfor %}
+		{% endblock %}
+	</table>
+	
+	<p>Published on <strong>{{ newsitem.pub_date|date:"F j, Y" }}</strong>.</p>
+	
+	{% if not newsitem.schema.is_special_report %}
+		<ul class="inlinelist">
+		    <li><a href="{{ newsitem.schema.url }}about/">What this information means and where it comes from</a></li>
+		    <li><a href="{{ newsitem.schema.url }}">More {{ newsitem.schema.plural_name }} in {% METRO_NAME %}</a></li>
+		</ul>
+	{% endif %}
+	
+	{% block similaritems %}
+		{% if not newsitem.schema.is_special_report %}
+			{% if locations_within %}
+				<h2>Other {{ newsitem.schema.plural_name }} nearby</h2>
+				<ul>
+					{% for location in locations_within %}
+					<li><a href="/{{ newsitem.schema.slug }}{{ location.url }}">{{ location.name }}</a></li>
+					{% endfor %}
+					<li><a href="{{ newsitem.schema.url }}">More {{ newsitem.schema.plural_name }} in {% METRO_NAME %}</a></li>
+				</ul>
+			{% endif %}
+		{% endif %}
+	{% endblock %}
+</div><!--/ #content-->
+{% endblock %}

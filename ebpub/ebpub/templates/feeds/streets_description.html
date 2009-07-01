@@ -1,0 +1,9 @@
+{% load eb full_links %}
+
+{% ifequal obj.0 'newsitem' %}
+	<ul>
+		{% full_links site.domain %}{% with obj.1 as place %}{% with obj.4 as is_block %}{% with obj.5 as block_radius %}{% newsitem_list_by_schema obj.3 %}{% endwith %}{% endwith %}{% endwith %}{% end_full_links %}
+	</ul>
+{% else %}
+	<p>{{ obj.1.summary }} <a href="{{ obj.1.url }}">Read more...</a></p>
+{% endifequal %}

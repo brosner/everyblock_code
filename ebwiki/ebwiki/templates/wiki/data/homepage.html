@@ -1,0 +1,36 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}Data feeds{% endblock %}
+
+{% block content %}
+
+<h1>Data feeds</h1>
+
+<p><a href="add_city/">Add a city</a> | <a href="add_type/">Add a type</a> | <a href="pp_status/">PP status</a> | <a href="tech_status/">Tech status</a> | <a href="maintenance/">Maintenance</a></p>
+
+<table>
+    <thead>
+        <tr>
+            <th>DATA</th>
+            {% for city in city_list %}
+            <th><a href="{{ city.url }}">{{ city.name }}</a></th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for type in type_list %}
+        <tr>
+            <th>{{ type.name }}</th>
+            {% for source in type.source_list %}
+                {% if source.id %}
+                    <td><a href="{{ source.url }}">PP: {{ source.get_pp_status_display }}<br>Tech: {{ source.get_tech_status_display }}</a>
+                {% else %}
+                    <td style="background: #eee;"><a href="{{ source.url }}"><b>Unknown</b></a></td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

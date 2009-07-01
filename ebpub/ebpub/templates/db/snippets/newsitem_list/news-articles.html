@@ -1,0 +1,8 @@
+{% for newsitem in newsitem_list %}
+	<li id="newsitem-{{ newsitem.id }}" class="newsitem news-articles">
+		<span class="location">{{ newsitem.location_name }}</span>
+		<strong class="title"><a href="{{ newsitem.item_url }}" class="url">{{ newsitem.title }}</a></strong>
+		<blockquote class="excerpt"><p>{{ newsitem.attribute_values.excerpt }}</p></blockquote>
+		<p class="info">Published by <strong class="source">{{ newsitem.attribute_values.source.name }}</strong> on <strong class="dateposted">{{ newsitem.item_date|date:"F j, Y" }}</strong>.</p>
+	</li>
+{% endfor %}

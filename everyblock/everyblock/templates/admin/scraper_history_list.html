@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+
+{% load eb %}
+
+{% block title %}Scraper history{% endblock %}
+
+{% block content %}
+<div id="content">
+	<p><a href="../">{% METRO_NAME %} admin</a></p>
+
+	<h1>Scraper history</h1>
+
+	<ul>
+		{% for schema in schema_list %}
+		<li><a href="{{ schema.slug }}/">{{ schema.plural_name|capfirst }}</a></li>
+		{% endfor %}
+	</ul>
+</div><!--/content-->
+{% endblock %}

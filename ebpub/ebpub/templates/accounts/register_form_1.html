@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Create an account{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h1>Create an account</h1>
+	<h2>Step 1: Verify your e-mail address</h2>
+	<h3>Enter your e-mail address below to create an account.</h3>
+	<form action="" method="post">
+		{{ form.email.errors }}
+		<table>
+			<tr>
+				<th><label for="id_email">Your e-mail address:</label></th>
+				<td>{{ form.email }}</td>
+			</tr>
+			<tr>
+				<th>&nbsp;</th>
+				<td>
+					<p><button type="submit">Submit e-mail address</button></p>
+				</td>
+			</tr>
+		</table>
+	</form>
+	<p>Already have an account? <a href="../login/">Log in here...</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,315 @@
+body {
+    font: 1em/1.4em Helvetica, Arial, sans-serif;
+    background: #313131;
+    color: rgba(255, 255, 255, .85);
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0.75);
+}
+
+a {
+    font-weight: bold;
+    text-decoration: none;
+    color: rgba(255, 255, 255, .85);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.75);
+}
+
+a:hover {
+    color: rgba(255, 255, 255, .45);
+}
+
+a:active {
+    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.75);
+}
+
+h1,h2,h3,h4 {
+    color: rgba(255, 255, 255, .85);
+    font-weight: normal;
+    font-family: "Helvetica Neue Light", "HelveticaNeue-Light", Helvetica, sans-serif;
+} 
+
+h1 {
+    margin-bottom: 1.5em;
+    line-height: 1.2em;
+}
+
+h2 {
+    margin-top: 1.5em;
+}
+
+h2:first-child {
+    margin-top: 0;
+}
+
+h3 {
+    margin-top: 2em;
+}
+
+h3:first-child {
+    margin-top: 0;
+}
+
+h4 {
+    font-family: Helvetica, sans-serif;
+    margin-bottom: 0.5em;
+}
+
+
+/* TABLE */
+
+table {
+    border: none;
+    border-spacing: 2px;
+    margin: 0 -12px;
+}
+
+table th,
+table td {
+    font-size: 0.875em;
+    padding: 2px 10px;
+    background: rgba(0, 0, 0, .15);
+    text-align: left;
+    vertical-align: top;
+}
+
+table .number { 
+    text-align: right; 
+}
+
+table th {
+    font-size: 0.75em;
+    border: none;
+    font-weight: normal;
+    color: rgba(255, 255, 255, .45);
+}
+
+table thead th {
+    background: transparent;
+}
+
+table td.date {
+    white-space: nowrap;
+}
+
+table td.down.upgood,
+table td.up.downgood {
+    background: rgba(173, 45, 45, .15);
+}
+
+table td.up.upgood,
+table td.down.downgood {
+    background: rgba(80, 173, 45, .15);
+}
+
+/* FORMS */
+
+form {
+    margin: 0 0;
+}
+
+input,
+textarea {
+    border: none;
+    margin: 10px 10px 0;
+    padding: 10px;
+    font-size: .875em;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+/* UTILITY */
+
+.left {
+    float: left;
+}
+
+.clear {
+    clear: both;
+}
+
+.subhead {
+    margin-top: -2em;
+}
+
+.small {
+    font-size: 0.75em;
+}
+
+.quiet {
+    color: rgba(255, 255, 255, .45);
+}
+
+/* BLOCKQUOTE */
+
+blockquote {
+    background: rgba(0, 0, 0, .15);
+    margin: 0 -12px;
+    padding: 2px 20px;
+}
+
+/* BUTTON */
+
+button,
+.button {
+    color: rgba(255, 255, 255, .85);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.75);
+    background: transparent;
+    border: none;
+    margin: 2px;
+    font: bold .875em Helvetica, Arial, sans-serif;
+    cursor: pointer;
+}
+
+button:hover,
+.button:hover {
+    color: rgba(255, 255, 255, .45);
+}
+
+button:active,
+.button:active {
+    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.75);
+}
+
+/* BREADCRUMB */
+
+.breadcrumb {
+    color: rgba(255, 255, 255, .45);
+}
+
+/* MESSAGE */
+
+.message .attributetable {
+    border-spacing: 0 2px;
+}
+
+.message .attributetable th {
+    white-space: nowrap;
+}
+
+.message .attributetable td {
+    width: 100%;
+}
+
+.message blockquote {
+    background: rgba(0, 0, 0, .25);
+}
+
+/* CATEGORY MENU */
+
+.category:after {
+    content: " \25BE";
+}
+
+/* SUBNAV */
+
+h1 + .subnav {
+    margin-top: -1.5em;
+}
+
+.subnav {
+    padding: 0;
+    position: relative;
+    left: -12px;
+    overflow: hidden;
+}
+
+.subnav li {
+    display: inline;
+    list-style-type: none;
+}
+
+.subnav li a {
+    float: left;
+    margin: 2px;
+    padding: 0.25em 10px;
+    background: rgba(0, 0, 0, .15);
+}
+
+.subnav li.current a {
+    color: rgba(255, 255, 255, .45);
+    cursor: default;
+}
+
+/* TOOLBAR */
+
+.toolbar {
+    margin: 2px -12px;
+    padding: 10px;
+    background: rgba(0, 0, 0, .15);
+    margin-left: -12px;
+    overflow: hidden;
+}
+
+/* LAYOUT */
+
+#container {
+    margin: 1.5em 20px 2em;
+}
+
+#header h1 {
+    font-size: 1.5em;
+    font-weight: normal;
+}
+
+.column {
+    margin-bottom: 1em;
+}
+
+.column.left {
+    margin-right: 48px;
+}
+
+.column.last {
+    margin-right: 0;
+}
+
+/* COMMUNICATION */
+
+.communication-list th {
+    padding-top: 0.65em;
+}
+
+.communication-list td {
+    width: 100%;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+.communication-list td p:first-child {
+    margin-top: 0.5em;
+}
+
+.communication-list td p:last-child {
+    margin-bottom: 0.5em;
+}
+
+.communication-list td .button {
+    float: right;
+    margin-left: 8px;
+    background: rgba(0, 0, 0, .25);
+    padding: 2px 4px;
+}
+
+.communication-list .message {
+    margin-left: 10px;
+    color: rgba(255, 255, 255, .65);
+}
+
+.communication-list .sender {
+    font-size: 1.125em;
+}
+
+.communication-list .action,
+.communication-list .datatypes {
+    color: rgba(255, 255, 255, .45);
+}
+
+.communication-list .datatypes {
+    font-size: 0.875em;
+}
+
+.communication-list .date {
+    white-space: nowrap;
+}
+
+.communication-list tr:hover th,
+.communication-list tr:hover td {
+    background: rgba(0, 0, 0, .25);
+}

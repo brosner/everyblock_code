@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>{% block title %}{% endblock %} | Wiki</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=320; initial-scale=.75; maximum-scale=.75; user-scalable=0;">
+	<link rel="alternate" type="application/atom+xml" href="/feeds/latest/" title="Latest wiki edits">
+	<link rel="stylesheet" href="/styles/wiki.css" type="text/css" media="all">
+	{% block extrahead %}{% endblock %}
+</head>
+<body>
+	{% block header %}
+	<div id="header">
+		<a id="site-title" href="/">Wiki</a>
+		<ul id="site-nav">
+			<li><a href="/data/">Data feeds</a></li>
+			<li><a href="/latest-changes/">Latest changes</a></li>
+		</ul>
+	</div>
+	{% endblock %}
+
+	<div id="content">
+		{% block content %}{% endblock %}
+	</div><!--/content-->
+
+	{% block footer %}{% endblock %}
+</body>
+</html>

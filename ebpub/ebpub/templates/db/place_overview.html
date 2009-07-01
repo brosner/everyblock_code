@@ -1,0 +1,145 @@
+{% extends "base_place.html" %}
+
+{% load eb %}
+
+{% block title %}News {% if is_block %}near{% else %}in{% endif %} {{ place.pretty_name }}{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style type="text/css" media="screen">
+	/* Basic styles for showing/hiding content in different "tabs" within each module. */
+	.pane {
+		display: none;
+	}
+	.pane.current {
+		display: block;
+	}
+	.tabs a.current {
+		font-weight: bold;
+	}
+</style>
+<script type="text/javascript">
+$j(document).ready(function() {
+	$j('#sectionfilterbutton').click(function() {
+		var url = $j('#sectionfilter').val();
+		if (url) { window.location = url; }
+	});
+	$j("div.module ul.tabs a").click(function() {
+		var link = $j(this);
+		if (link.hasClass('current')) return false;
+		link.parent().parent().find('a.current').removeClass('current');
+		link.addClass('current');
+
+		var linktype = '';
+		var classes = link.attr('class').split(/\s+/);
+		for (var i=0; i<classes.length; i++) {
+			if (classes[i].match(/^link/)) { linktype = classes[i].substring(4); }
+		}
+
+		var el = link;
+		while (el.hasClass('module') === false) { el = el.parent(); }
+		el.find('.pane.current').removeClass('current');
+		el.find('.pane.pane' + linktype).addClass('current');
+		var sid = el.attr('id').replace('module-', '');
+
+		if (linktype == 'datechart') {
+			var div = $j('#datechart-' + sid);
+			if ($j.data(div.get(0), 'loaded')) { return false; }
+			div.load('/api/place-date-chart/?s=' + sid + '&pid={% if is_block %}b:{{ place.id }}.{{ block_radius }}{% else %}l:{{ place.id }}{% endif %}');
+			$j.data(div.get(0), 'loaded', 1);
+		}
+		else if (linktype.match(/^lookup/)) {
+			var sfid = linktype.substring(6);
+			var div = $j('#lookupchart-' + sfid);
+			if ($j.data(div.get(0), 'loaded')) { return false; }
+			div.load('/api/place-lookup-chart/?sf=' + sfid + '&pid={% if is_block %}b:{{ place.id }}.{{ block_radius }}{% else %}l:{{ place.id }}{% endif %}');
+			$j.data(div.get(0), 'loaded', 1);
+		}
+
+		return false;
+	});
+});
+</script>
+{% endblock %}
+
+{% block breadcrumbs %}
+	{% get_metro %}
+	{% if is_block %}
+		<a href="/streets/">Streets</a> / 
+		{% if METRO.multiple_cities %}<a href="/streets/{{ place.city_object.slug }}/">{{ place.city_object.name }}</a>{% endif %}
+		<a href="{{ place.street_url }}">{{ place.street_pretty_name }}</a>
+	{% else %}
+		<a href="{{ place.location_type.url }}">{{ place.location_type.plural_name|capfirst }}</a>
+	{% endif %}
+{% endblock %}
+
+{% block header %}
+	{% if is_block %}{{ place.from_num }} – {{ place.to_num }} block of {% if place.predir %}{{ place.predir }}. {% endif %}{{ place.street_pretty_name }}{% if place.postdir %} {{ place.postdir }}.{% endif %}
+	{% else %}{{ place.name }}
+	{% endif %}
+{% endblock %}
+
+{% block place_content %}
+	<h2>Latest news {% if is_block %}near{% else %}in{% endif %} {{ place.pretty_name }}</h2>
+	<p>Stay up to date: <a href="{{ place.url }}feeds/">Custom RSS feeds</a> <a href="{{ place.alert_url }}">E-mail alerts</a></p>
+	<ul>			    
+		<li><a href="../">Timeline</a></li>
+		<li><strong>Overview</strong></li>
+	</ul>
+	{% if is_block %}
+	<p>Show news within:</p>
+	<ul>
+		<li>{% ifequal block_radius "1" %}1 block{% else %}<a href="?radius=1" rel="nofollow">1 block</a>{% endifequal %}</li>
+		<li>{% ifequal block_radius "3" %}3 blocks{% else %}<a href="?radius=3" rel="nofollow">3 blocks</a>{% endifequal %}</li>
+		<li>{% ifequal block_radius "8" %}8 blocks{% else %}<a href="?radius=8" rel="nofollow">8 blocks</a>{% endifequal %}</li>
+	</ul>
+	{% endif %}
+	<p>Search nearby:</p>
+	<select id="sectionfilter">
+		<option value="">Choose a type of information&hellip;</option>
+		{% for schema in filtered_schema_list %}
+			<option value="{{ schema.url }}{{ place.url|slice:"1:" }}">{{ schema.plural_name|capfirst }}</option>
+		{% endfor %}
+	</select>
+	<button id="sectionfilterbutton">Go</button>
+	<div id="content">
+		{% for schema_block in schema_blocks|stride:"2" %}
+			{% for schema in schema_block %}
+				{% if schema.latest_newsitems %}
+				<div class="module" id="module-{{ schema.schema.id }}">
+					<h2>{{ schema.schema.plural_name|capfirst }}</h2>
+					{% if schema.schema.allow_charting %}
+						<ul class="tabs">
+							<li><a href="#" class="linklist current">Recent items</a></li>
+							<li><a href="#" class="linkdatechart">By {{ schema.schema.date_name }}</a></li>
+							{% for lookup in schema.lookup_charts %}
+							<li><a href="#" class="linklookup{{ lookup.id }}">By {{ lookup.pretty_name }}</a></li>
+							{% endfor %}
+						</ul>
+					{% endif %}
+					<div class="pane panelist current">
+						<ul class="newsitemlist">
+							{% newsitem_list_by_schema schema.latest_newsitems %}
+						</ul>
+						<p>
+							{% if schema.schema.allow_charting %}
+							<a class="search" href="{{ schema.schema.url }}{{ place.url|slice:"1:" }}">More nearby</a>
+							{% endif %}
+							<a class="date" href="{{ schema.schema.url }}">Citywide overview</a>
+							<a class="help" href="{{ schema.schema.url }}about/">About</a>
+						</p>
+					</div>
+					<div class="pane panedatechart calendarchart" id="datechart-{{ schema.schema.id }}"><p class="loading">Loading...</p></div>
+					{% for lookup in schema.lookup_charts %}
+					<div class="pane panelookup{{ lookup.id }}" id="lookupchart-{{ lookup.id }}"><p class="loading">Loading...</p></div>
+					{% endfor %}
+			{% endif %}
+		{% endfor %}
+		{% endfor %}
+		<h2>Sign up for:</h2>
+		<ul>
+			<li><a class="email" href="{{ place.alert_url }}">E-mail alerts</a></li>
+			<li><a class="feed" href="{{ place.url }}feeds/">Custom RSS feeds</a></li>
+		</ul>
+	</div><!--/ #content -->
+{% endblock %}

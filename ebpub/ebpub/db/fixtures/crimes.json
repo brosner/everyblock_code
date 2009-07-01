@@ -1,0 +1,369 @@
+[
+ {
+  "pk": "1",
+  "model": "db.newsitem",
+  "fields": {
+   "schema": 1,
+   "title": "HM609859",
+   "description": "Crime type 97 in location 66.",
+   "url": "",
+   "pub_date": "2006-09-26 00:00:00",
+   "item_date": "2006-09-26",
+   "location": "0101000020E6100000704221020EF355C05D6C5A2904FE4440",
+   "location_name": "228 S. Wabash Ave."
+  }
+ },
+ {
+  "pk": "2",
+  "model": "db.newsitem",
+  "fields": {
+   "schema": 1,
+   "title": "HM694545",
+   "description": "Crime type 58 in location 77.",
+   "url": "",
+   "pub_date": "2006-11-08 00:00:00",
+   "item_date": "2006-11-08",
+   "location": "0101000020E6100000704221020EF355C05D6C5A2904FE4440",
+   "location_name": "228 S. Wabash Ave."
+  }
+ },
+ {
+  "pk": "3",
+  "model": "db.newsitem",
+  "fields": {
+   "schema": 1,
+   "title": "HM696584",
+   "description": "Crime type 266 in location 32.",
+   "url": "",
+   "pub_date": "2006-11-08 00:00:00",
+   "item_date": "2006-11-08",
+   "location": "0101000020E6100000704221020EF355C05D6C5A2904FE4440",
+   "location_name": "228 S. Wabash Ave."
+  }
+ },
+ {
+  "pk": "567028",
+  "model": "db.attribute",
+  "fields": {
+   "news_item": 1,
+   "schema": 1,
+   "varchar01": "HM609859",
+   "varchar02": "",
+   "varchar03": null,
+   "varchar04": null,
+   "varchar05": null,
+   "date01": "2006-09-19",
+   "date02": null,
+   "date03": null,
+   "date04": null,
+   "date05": null,
+   "time01": null,
+   "time02": null,
+   "datetime01": null,
+   "datetime02": null,
+   "datetime03": null,
+   "datetime04": null,
+   "bool01": false,
+   "bool02": false,
+   "bool03": true,
+   "bool04": null,
+   "bool05": null,
+   "int01": 25916,
+   "int02": 214,
+   "int03": 97,
+   "int04": 66,
+   "int05": null
+  }
+ },
+ {
+  "pk": "651499",
+  "model": "db.attribute",
+  "fields": {
+   "news_item": 2,
+   "schema": 1,
+   "varchar01": "HM694545",
+   "varchar02": "",
+   "varchar03": null,
+   "varchar04": null,
+   "varchar05": null,
+   "date01": "2006-11-01",
+   "date02": null,
+   "date03": null,
+   "date04": null,
+   "date05": null,
+   "time01": null,
+   "time02": null,
+   "datetime01": null,
+   "datetime02": null,
+   "datetime03": null,
+   "datetime04": null,
+   "bool01": false,
+   "bool02": false,
+   "bool03": true,
+   "bool04": null,
+   "bool05": null,
+   "int01": 2373,
+   "int02": 64,
+   "int03": 58,
+   "int04": 77,
+   "int05": null
+  }
+ },
+ {
+  "pk": "651500",
+  "model": "db.attribute",
+  "fields": {
+   "news_item": 3,
+   "schema": 1,
+   "varchar01": "HM696584",
+   "varchar02": "",
+   "varchar03": null,
+   "varchar04": null,
+   "varchar05": null,
+   "date01": "2006-11-01",
+   "date02": null,
+   "date03": null,
+   "date04": null,
+   "date05": null,
+   "time01": null,
+   "time02": null,
+   "datetime01": null,
+   "datetime02": null,
+   "datetime03": null,
+   "datetime04": null,
+   "bool01": false,
+   "bool02": false,
+   "bool03": true,
+   "bool04": null,
+   "bool05": null,
+   "int01": 17286,
+   "int02": 5,
+   "int03": 266,
+   "int04": 32,
+   "int05": null
+  }
+ },
+ {
+  "pk": "1",
+  "model": "db.schemafield",
+  "fields": {
+   "schema": 1,
+   "name": "case_number",
+   "real_name": "varchar01",
+   "pretty_name": "Case number",
+   "pretty_name_plural": "Case numbers",
+   "display": true,
+   "is_lookup": false,
+   "is_filter": false,
+   "is_charted": false,
+   "is_searchable": false,
+   "display_order": 1
+  }
+ },
+ {
+  "pk": "2",
+  "model": "db.schemafield",
+  "fields": {
+   "schema": 1,
+   "name": "crime_date",
+   "real_name": "date01",
+   "pretty_name": "Crime date",
+   "pretty_name_plural": "Crime dates",
+   "display": true,
+   "is_lookup": false,
+   "is_filter": true,
+   "is_charted": false,
+   "is_searchable": false,
+   "display_order": 2
+  }
+ },
+ {
+  "pk": "3",
+  "model": "db.schemafield",
+  "fields": {
+   "schema": 1,
+   "name": "crime_time",
+   "real_name": "time01",
+   "pretty_name": "Crime time",
+   "pretty_name_plural": "Crime times",
+   "display": true,
+   "is_lookup": false,
+   "is_filter": false,
+   "is_charted": false,
+   "is_searchable": false,
+   "display_order": 3
+  }
+ },
+ {
+  "pk": "4",
+  "model": "db.schemafield",
+  "fields": {
+   "schema": 1,
+   "name": "arrests",
+   "real_name": "bool01",
+   "pretty_name": "Arrests",
+   "pretty_name_plural": "Arrests",
+   "display": true,
+   "is_lookup": false,
+   "is_filter": false,
+   "is_charted": false,
+   "is_searchable": false,
+   "display_order": 4
+  }
+ },
+ {
+  "pk": "5",
+  "model": "db.schemafield",
+  "fields": {
+   "schema": 1,
+   "name": "domestic",
+   "real_name": "bool02",
+   "pretty_name": "Domestic",
+   "pretty_name_plural": "Domestic",
+   "display": true,
+   "is_lookup": false,
+   "is_filter": false,
+   "is_charted": false,
+   "is_searchable": false,
+   "display_order": 5
+  }
+ },
+ {
+  "pk": "6",
+  "model": "db.schemafield",
+  "fields": {
+   "schema": 1,
+   "name": "block_id",
+   "real_name": "int01",
+   "pretty_name": "Block ID",
+   "pretty_name_plural": "Block IDs",
+   "display": false,
+   "is_lookup": false,
+   "is_filter": false,
+   "is_charted": false,
+   "is_searchable": false,
+   "display_order": 0
+  }
+ },
+ {
+  "pk": "7",
+  "model": "db.schemafield",
+  "fields": {
+   "schema": 1,
+   "name": "beat_id",
+   "real_name": "int02",
+   "pretty_name": "Beat",
+   "pretty_name_plural": "Beats",
+   "display": true,
+   "is_lookup": true,
+   "is_filter": true,
+   "is_charted": false,
+   "is_searchable": false,
+   "display_order": 6
+  }
+ },
+ {
+  "pk": "8",
+  "model": "db.schemafield",
+  "fields": {
+   "schema": 1,
+   "name": "type_id",
+   "real_name": "int03",
+   "pretty_name": "Crime type",
+   "pretty_name_plural": "Crime types",
+   "display": true,
+   "is_lookup": true,
+   "is_filter": true,
+   "is_charted": true,
+   "is_searchable": false,
+   "display_order": 7
+  }
+ },
+ {
+  "pk": "9",
+  "model": "db.schemafield",
+  "fields": {
+   "schema": 1,
+   "name": "location_id",
+   "real_name": "int04",
+   "pretty_name": "Location",
+   "pretty_name_plural": "Locations",
+   "display": true,
+   "is_lookup": true,
+   "is_filter": true,
+   "is_charted": true,
+   "is_searchable": false,
+   "display_order": 8
+  }
+ },
+ {
+  "pk": "10",
+  "model": "db.schemafield",
+  "fields": {
+   "schema": 1,
+   "name": "is_outdated",
+   "real_name": "bool03",
+   "pretty_name": "Is outdated",
+   "pretty_name_plural": "Is outdated",
+   "display": false,
+   "is_lookup": false,
+   "is_filter": false,
+   "is_charted": true,
+   "is_searchable": false,
+   "display_order": 0
+  }
+ },
+ {
+  "pk": "11",
+  "model": "db.schemafield",
+  "fields": {
+   "schema": 1,
+   "name": "police_id",
+   "real_name": "int05",
+   "pretty_name": "Police ID",
+   "pretty_name_plural": "Police IDs",
+   "display": false,
+   "is_lookup": false,
+   "is_filter": false,
+   "is_charted": false,
+   "is_searchable": false,
+   "display_order": 0
+  }
+ },
+ {
+  "pk": "12",
+  "model": "db.schemafield",
+  "fields": {
+   "schema": 1,
+   "name": "status",
+   "real_name": "varchar02",
+   "pretty_name": "Status",
+   "pretty_name_plural": "Statuses",
+   "display": false,
+   "is_lookup": false,
+   "is_filter": false,
+   "is_charted": false,
+   "is_searchable": false,
+   "display_order": 0
+  }
+ },
+ {
+  "pk": "1",
+  "model": "db.schema",
+  "fields": {
+   "name": "Crime",
+   "plural_name": "Crimes",
+   "slug": "crime",
+   "min_date": "2006-09-19",
+   "last_updated": "2006-11-08",
+   "importance": 10,
+   "is_public": true,
+   "can_collapse": false,
+   "has_newsitem_detail": false,
+   "allow_charting": false,
+   "uses_attributes_in_list": false,
+   "number_in_overview": 5,
+   "is_special_report": false
+  }
+ }
+]

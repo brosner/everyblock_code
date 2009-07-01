@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block fulltitle %}ebblog{% endblock %}
+
+{% block pageid %}latest{% endblock %}
+
+{% block content %}
+{% for object in latest %}
+<div class="post">
+	<h2 class="title"><a class="url" href="{{ object.url }}">{{ object.headline }}</a></h2>
+	<p class="dateline">Posted <span class="date">{{ object.pub_date|date:"F j, Y" }}</span> by <strong class="author">{{ object.author }}</strong></p>
+	<div class="body">
+		{{ object.body|safe }}
+	</div>
+</div><!--/post-->
+{% endfor %}
+{% endblock %}

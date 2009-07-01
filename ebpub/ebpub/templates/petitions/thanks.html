@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% load eb %}
+
+{% block title %}Thanks for signing the petition{% endblock %}
+
+{% block content %}
+<div id="content">
+	{% if is_schema %}<p><a href="{{ petition.schema.url }}">{{ petition.schema.name|capfirst }}</a></p>{% endif %}
+	<h1>Thanks</h1>
+</div><!--/content-->
+{% endblock %}

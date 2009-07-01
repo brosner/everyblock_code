@@ -1,0 +1,8 @@
+#!/usr/bin/env python
+"""
+A simple command-line utility that prints a sorted list of
+city short names to stdout.
+"""
+from ebpub.metros.allmetros import METRO_DICT
+
+print ' '.join(sorted(METRO_DICT.keys()))

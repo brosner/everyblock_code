@@ -1,0 +1,28 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}Data feed maintenance{% endblock %}
+
+{% block content %}
+
+<h1><a href="../">Data feeds</a> / Maintenance</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>City</th>
+            <th>Data type</th>
+            <th>Maintenance needs</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for source in source_list %}
+        <tr>
+            <td>{% ifchanged %}<a href="{{ source.city.url }}">{{ source.city.name }}</a>{% endifchanged %}</td>
+            <td><a href="{{ source.url }}">{{ source.data_type.name }}</a> (<a href="{{ source.edit_url }}">Edit</a>)</td>
+            <td>{{ source.maintenance_needs }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

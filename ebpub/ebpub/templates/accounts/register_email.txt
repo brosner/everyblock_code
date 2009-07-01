@@ -1,0 +1,12 @@
+{% autoescape off %}
+Hello,
+
+Somebody with this e-mail address ({{ email }}) signed up for an
+account. Please confirm you're interested by
+clicking the following link:
+
+{{ url }}
+
+(Note that the link might wrap over multiple lines, depending on
+your e-mail program.)
+{% endautoescape %}

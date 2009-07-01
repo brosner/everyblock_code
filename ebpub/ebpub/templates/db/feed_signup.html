@@ -1,0 +1,65 @@
+{% extends "base_place.html" %}
+
+{% load eb %}
+
+{% block title %}RSS feeds for {{ place.pretty_name }}{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="alternate" type="application/rss+xml" title="RSS" href="{{ place.rss_url }}">
+<script type="text/javascript">
+function make_feed_url() {
+	var optin = [];
+	var optout = [];
+	$j('.schemafeed').each(function() {
+		var slug = this.id.split('schemafeed-')[1];
+		if ($j(this).attr('checked'))
+			optin[optin.length] = slug;
+		else
+			optout[optout.length] = slug;
+	});
+	var qs = '';
+	if ($j('#includenew').attr('checked')) {
+		if (optout.length) qs = '?ignore=' + optout.join(',');
+	}
+	else {
+		if (optin.length) qs = '?only=' + optin.join(',');
+	}
+
+	var radius = $j('#radius-radio input:checked').val();
+	if (radius) {
+		qs += (qs ? '&' : '?') + 'radius=' + radius;
+	}
+
+	$j('#customlink').attr('href', 'http://{% EB_SUBDOMAIN %}{{ place.rss_url }}' + qs);
+}
+window.onload = function() {
+	$j('.updateonclick').click(make_feed_url);
+}
+</script>
+{% endblock %}
+
+{% block header %}RSS feeds for {{ place.pretty_name }}{% endblock %}
+
+{% block place_content %}
+<div id="content">
+	<p>Get updates when new information around <a href="../">{{ place.pretty_name }}</a> is published. <a href="http://www.whatisrss.com/">What is RSS?</a></p>
+	<h2>Choose your feed</h2>
+	<h3>Give me everything&hellip;</h3>
+	<p><a href="{{ place.rss_url }}">Complete feed for {{ place.pretty_name }}</a></p>
+	<h3>Make me a custom feed&hellip;</h3>
+	<p>Choose the types of news you want to see in your feed and subscribe using the button below.</p>
+	<ul>
+		<li><a href="#" onclick="$j('.schemafeed').attr('checked', 'checked'); make_feed_url(); return false;">Select all</a></li>
+		<li><a href="#" onclick="$j('.schemafeed').attr('checked', ''); make_feed_url(); return false;">Select none</a></li>
+	</ul>
+	<ul>
+		{% for schema in schema_list %}
+		<li><label><input type="checkbox" class="schemafeed updateonclick" id="schemafeed-{{ schema.slug }}" checked="checked"> {{ schema.plural_name|capfirst }}</label></li> 
+		{% endfor %}
+	</ul>
+	<p><label><input type="checkbox" class="updateonclick" checked="checked" id="includenew"> When new data types are added, include them in the feed automatically</label></p>
+	{% if is_block %}<p id="radius-radio">Radius: <label><input type="radio" class="updateonclick" name="radius" value="1"> 1 block</label> <label><input type="radio" class="updateonclick" name="radius" value="3"> 3 blocks</label> <label><input type="radio" class="updateonclick" name="radius" value="8" checked> 8 blocks</label></p>{% endif %}
+  <p><a id="customlink" href="http://{% EB_SUBDOMAIN %}{{ place.rss_url }}">Custom feed for {{ place.pretty_name }}</a></p>
+</div>
+{% endblock %}

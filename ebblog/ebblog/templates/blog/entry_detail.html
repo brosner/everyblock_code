@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}{{ object.headline }}{% endblock %}
+
+{% block content %}
+<div class="post">
+	<h1 class="title">{{ object.headline }}</h1>
+	<p class="dateline">Posted <span class="date">{{ object.pub_date|date:"F j, Y" }}</span> by <strong class="author">{{ object.author }}</strong></p>
+	<div class="body">
+		{{ object.body|safe }}
+	</div>
+</div>
+{% endblock %}

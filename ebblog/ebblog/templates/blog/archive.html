@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Archives{% endblock %}
+
+{% block content %}
+
+<h1>Archive</h1>
+
+{% regroup object_list by pub_date.year as entries_by_year %}
+{% for group in entries_by_year %}
+<h2 class="yeargrouper">{{ group.grouper }}</h2>
+<ul id="archiveslist" class="linklist">
+{% for entry in group.list %}
+	<li><strong class="date">{{ entry.pub_date|date:"M j" }}</strong> <a class="title" href="{{ entry.url }}">{{ entry.headline }}</a></li>
+{% endfor %}
+</ul>
+{% endfor %}
+{% endblock %}

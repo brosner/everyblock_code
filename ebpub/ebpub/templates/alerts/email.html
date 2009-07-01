@@ -1,0 +1,25 @@
+{% load eb full_links %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+	{% if newsitem_list %}
+	{% regroup newsitem_list by schema as schema_list %}
+	{% for schema in schema_list %}
+		<h4>{{ schema.list|length }} {% schema_plural_name schema.grouper schema.list %}</h4>
+		<ul class="newsitemlist">
+		{% full_links domain %}{% newsitem_list_by_schema schema.list %}{% end_full_links %}
+		</ul>
+	{% endfor %}
+	{% else %}
+	<p>No news nearby.</p>
+	{% endif %}
+	<br>
+	<p>See the latest news around {{ place_name }} at <a href="http://{{ domain }}{{ place_url }}">http://{{ domain }}{{ place_url }}</a>.</p>
+
+	<p>You've signed up to receive {% ifequal frequency 7 %}weekly{% else %}daily{% endifequal %} e-mails for {{ place_name }} in {% METRO_NAME %} at {{ email_address }}. <a href="http://{{ domain }}{{ unsubscribe_url }}">To unsubscribe, click this sentence</a> and enter your account password. (If you don't remember your password, or you haven't created one, just click the link on that page to send you a new password.)</p>
+</body>
+</html>

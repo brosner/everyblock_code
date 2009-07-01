@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+
+{% load eb %}
+
+{% block title %}Edit schema: {{ schema.plural_name|capfirst }}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<p><a href="../../">{% METRO_NAME %} admin</a> / <a href="../">Schemas</a></p>
+
+	<h1>Edit schema: {{ schema.plural_name|capfirst }}</h1>
+
+	<form action="" method="post">
+		<table>
+			{{ form.as_table }}
+			<tr class="submit-row"><th>&nbsp;</th><td><input class="button default" type="submit" value="Submit" /></td></tr>
+		</table>
+	</form>
+</div><!--/content-->
+
+{% endblock %}

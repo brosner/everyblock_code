@@ -1,0 +1,28 @@
+{% extends "admin/base.html" %}
+
+{% load eb %}
+
+{% block title %}Scraper history: {{ schema.plural_name }}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<p><a href="../../">{% METRO_NAME %} admin</a></p>
+
+	<h1><a href="../">Scraper history</a>: {{ schema.plural_name }}</h1>
+
+	<table>
+		<tr><th>Started</th><th>Finished</th><th>Time spent</th><th>Added</th><th>Changed</th><th>Skipped</th><th>Got error</th></tr>
+		{% for dataupdate in dataupdate_list %}
+		<tr{% if dataupdate.got_error %} style="background: pink;"{% endif %}>
+			<td>{{ dataupdate.update_start|date:"N j, Y, P" }}</td>
+			<td>{{ dataupdate.update_finish|date:"N j, Y, P" }}</td>
+			<td>{{ dataupdate.total_time }}</td>
+			<td>{{ dataupdate.num_added }}</td>
+			<td>{{ dataupdate.num_changed }}</td>
+			<td>{{ dataupdate.num_skipped }}</td>
+			<td>{{ dataupdate.got_error|yesno|capfirst }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+</div><!--/content-->
+{% endblock %}

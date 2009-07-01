@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Confirm{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h1>Do you really want to unsubscribe?</h1>
+	<p>Are you sure you want to unsubscribe from e-mail alerts for {{ alert.name }}?</p>
+	<form action="" method="post">
+		<p><input type="submit" value="Yes, unsubscribe me"></p>
+	</form>
+	<p><a href="/accounts/dashboard/">No, take me back to my account</a></p>
+</div><!--/ #content-->
+{% endblock %}

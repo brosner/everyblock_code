@@ -1,0 +1,94 @@
+{% comment %}
+This snippet requires these variables:
+schema, filters, location_type_list, location_filter_applied, date_filter_applied,
+start_date, end_date, lookup_list, search_list, search_url
+{% endcomment %}
+
+{% load eb_filter %}
+
+<div id="schemanav">
+	<h2>{% if filters %}Refine your search{% else %}Filter this section{% endif %}</h2>
+	{% if filters %}
+	<ul>
+		{% for filter in filters.values %}
+		<li class="filter changed">
+			<span class="filter-label">{{ filter.label|capfirst }}:</span>
+			<strong class="filter-value">{{ filter.short_value }}</strong>
+			<a class="filter-clear" href="{% filter_url schema filters -filter.name %}" title="Remove this filter" rel="nofollow">Clear</a>
+		</li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+	{% if not location_filter_applied %}
+	<div class="filtergroup" id="location-filtergroup">
+		<h3>Location</h3>
+		<h4>Search near an address:</h4>
+		<form action="{{ search_url }}" method="get">
+			<p>
+				<input type="text" id="locationsearch-input" name="address">
+				<button type="submit">Search</button>
+				<label class="radius-search">
+					Within: 
+					<select id="locationsearch-radius" name="radius">
+						<option value="1">1 block </option>
+						<option value="3">3 blocks </option>
+						<option value="8" selected="selected">8 blocks </option>
+					</select>
+				</label>
+			</p>
+		</form>
+		<h4>Or choose a location:</h4>
+		<ul>
+			{% for location_type in location_type_list %}
+			<li><a href="locations/{{ location_type.slug }}/" rel="nofollow">{{ location_type.plural_name|capfirst }}&hellip;</a></li>
+			{% endfor %}
+		</ul>
+	</div><!--/ .filtergroup#location-filtergroup -->
+	{% endif %}
+	{% if not date_filter_applied %}
+	<div class="filtergroup" id="date-filtergroup">
+		<h3>{{ schema.date_name|capfirst }}</h3>
+		<form action="by-date/" method="get">
+			<p>
+				<input id="start_date" type="text" name="start_date" value="{{ start_date|date:"n/j/Y" }}">
+					 - 
+					<input id="end_date" type="text" name="end_date" value="{{ end_date|date:"n/j/Y" }}">
+				<button type="submit">Search</button>
+			</p>
+		</form>
+	</div><!--/ .filtergroup#date-filtergroup -->
+	{% endif %}
+	{% for schemafield in lookup_list %}
+		<div class="filtergroup">
+			<h3>{{ schemafield.sf.pretty_name|capfirst }}</h3>
+			<ul>
+				{% for value in schemafield.top_values %}
+					<li><a href="by-{{ schemafield.sf.slug }}/{{ value.lookup.slug }}/" rel="nofollow">{{ value.lookup.name }}</a></li>
+				{% endfor %}
+				{% if schemafield.has_more %}<li class="more"><a href="by-{{ schemafield.sf.slug }}/" rel="nofollow">See all&hellip;</a></li>{% endif %}
+			</ul>
+		</div>
+	{% endfor %}
+	{% for schemafield in search_list %}
+		<div class="filtergroup">
+			<h3>{{ schemafield.pretty_name|capfirst }}</h3>
+			<form action="{{ search_url }}" method="get">
+				<p class="inlineform">
+					<input type="hidden" name="textsearch" value="{{ schemafield.slug }}">
+					<input type="text" name="q" value="">
+					<button type="submit">Search</button>
+				</p>
+			</form>
+		</div>
+	{% endfor %}
+	{% for schemafield in boolean_lookup_list %}
+		<div class="filtergroup">
+			<h3>{{ schemafield.pretty_name|capfirst }}</h3>
+			<ul>
+				<li><a href="by-{{ schemafield.slug }}/yes/" rel="nofollow">Yes</a></li>
+				<li><a href="by-{{ schemafield.slug }}/no/" rel="nofollow">No</a></li>
+				<li><a href="by-{{ schemafield.slug }}/na/" rel="nofollow">N/A</a></li>
+			</ul>
+		</div>
+	{% endfor %}
+</div><!--/ #schemanav -->

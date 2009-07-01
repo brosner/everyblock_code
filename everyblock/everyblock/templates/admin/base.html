@@ -1,0 +1,14 @@
+{% load eb staticmedia %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>{% block fulltitle %}{% block title %}{% endblock %} | {% METRO_NAME %} admin{% endblock %}</title>
+	{% block extrahead %}
+	<link rel="stylesheet" href="{% autoversion "/styles/wiki.css" %}" type="text/css" media="all" charset="utf-8">
+	{% endblock %}
+</head>
+<body>
+	{% block content %}{% endblock %}
+	{% block footer %}{% endblock %}
+</body>
+</html>

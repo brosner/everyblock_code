@@ -1,0 +1,55 @@
+- pk: 1000
+  model: streets.block
+  fields:
+    tlid: null
+    pretty_name: 200-298 S. Wabash Ave.
+    predir: S
+    street: WABASH
+    street_slug: wabash-ave
+    street_pretty_name: Wabash Ave.
+    suffix: AVE
+    postdir: ''
+    from_num: 200
+    to_num: 298
+    zip: 60605
+    city: CHICAGO
+    state: IL
+    location: 0102000020E610000002000000564ACFF412E855C084F3A96395F044401B4CC3F011E855C04819710168F04440
+
+- pk: 1001
+  model: streets.block
+  fields:
+    tlid: null
+    pretty_name: 216-298 N. Wabash Ave.
+    predir: N
+    street: WABASH
+    street_slug: wabash-ave
+    street_pretty_name: Wabash Ave.
+    suffix: AVE
+    postdir: ''
+    from_num: 216
+    to_num: 298
+    zip: 60611
+    city: CHICAGO
+    state: IL
+    location: 0102000020E610000002000000AD1397E315E855C007616EF772F14440A73CBA1116E855C0A2D5C9198AF14440
+
+- pk: 1000
+  model: streets.intersection
+  fields:
+    pretty_name: S. Wabash Ave. & E. Jackson Blvd.
+    slug: s-wabash-ave-and-e-jackson-blvd
+    # Street A
+    predir_a: S
+    street_a: WABASH
+    suffix_a: AVE
+    postdir_a: ''
+    # Street B
+    predir_b: E
+    street_b: JACKSON
+    suffix_b: BLVD
+    postdir_b: ''
+    zip: 60604
+    city: CHICAGO
+    state: IL
+    location: 0101000020E61000001B4CC3F011E855C04819710168F04440

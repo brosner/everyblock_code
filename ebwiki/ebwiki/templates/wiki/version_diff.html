@@ -1,0 +1,19 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}Changes between versions {{ version1 }} and {{ version2 }} of {{ slug }}{% endblock %}
+
+{% block content %}
+<h1>Changes between versions {{ version1 }} and {{ version2 }} of <a href="{{ page.url }}">{{ slug }}</a></h1>
+
+<p class="page-tools">Changes were made by <span class="user">{{ page.change_user }}</span>.</p>
+
+<div class="codeport">
+	<pre>{{ diff|escape }}</pre>
+</div>
+{% endblock %}
+
+{% block footer %}
+<div id="footer">
+	<p class="page-tools"><a class="button" href="{{ page.history_url }}">Other versions of this page</a> <a class="button default" href="{{ page.url }}">Current version</a></p>
+</div>
+{% endblock %}

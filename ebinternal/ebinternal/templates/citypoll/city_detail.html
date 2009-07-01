@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{{ city.pretty_name }} | City poll{% endblock %}
+
+{% block content %}
+<p class="breadcrumb"><a href="../../">Internal</a> / <a href="../">City poll</a></p>
+
+<h1>Votes for {{ city.pretty_name }}</h1>
+
+<table>
+	<thead>
+		<tr>
+			<th>Date/time</th>
+			<th>IP address</th>
+			<th>E-mail</th>
+			<th>Raw text</th>
+			<th>Notes</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for vote in vote_list %}
+	<tr>
+		<td><nobr>{{ vote.date_received|date:"F j, Y, P" }}</nobr></td>
+		<td><nobr>{{ vote.ip_address }}</nobr></td>
+		<td>{{ vote.email }}</td>
+		<td><nobr>{{ vote.city_text }}</nobr></td>
+		<td>{{ vote.notes }}</td>
+	</tr>
+	{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

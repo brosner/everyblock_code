@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% load eb %}
+
+{% block title %}E-mail sent{% endblock %}
+
+{% block content %}
+{% get_metro %}
+<div id="content">
+	<h1>E-mail sent</h1>
+	<p>We've sent an e-mail with instructions.</p>
+	<p><a href="/">Back to the homepage.</a></p>
+</div>
+{% endblock %}

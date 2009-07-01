@@ -1,0 +1,17 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}Conflict!{% endblock %}
+
+{% block content %}
+
+<h1>Conflict!</h1>
+
+<p>Somebody has saved changes to the <strong>{{ latest_page.slug }}</strong> page since the moment you clicked "Edit this page."</p>
+
+<p><a href="{{ latest_page.edit_url }}">Go to this page</a>, then make your changes again. For your convenience, here's a diff of the changes you were about to save:</p>
+
+<pre>
+{{ diff }}
+</pre>
+
+{% endblock %}

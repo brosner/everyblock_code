@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Error{% endblock %}
+
+{% block content %}
+<div id="content">
+	<p>Are you sure you clicked that link in your e-mail correctly?</p>
+	<p>Try checking the e-mail we sent you again to make sure you clicked the right link.</p>
+	<p><a href="{{ form_link }}">Try entering the e-mail address again</a></p>
+</div>
+{% endblock %}

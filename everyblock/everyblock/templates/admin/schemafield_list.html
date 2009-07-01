@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+
+{% load eb %}
+
+{% block title %}Schema fields{% endblock %}
+
+{% block content %}
+<div id="content">
+	<p><a href="../">{% METRO_NAME %} admin</a></p>
+
+	<h1>Schema fields</h1>
+
+	{% regroup schemafield_list by schema as schema_list %}
+
+	{% for schema in schema_list %}
+		<h2><a href="{{ schema.grouper.url }}">{{ schema.grouper.plural_name|capfirst }}</a> <small>(Attributes in list: {{ schema.grouper.uses_attributes_in_list|yesno }}. Number on overview: {{ schema.grouper.number_in_overview }})</small></h2>
+		<table>
+			<tr><th>Name</th><th>Real name</th><th>Pretty name</th><th>Pretty name plural</th><th>Display order</th><th>Is lookup</th></tr>
+			{% for sf in schema.list %}
+			<tr>
+				<td>{{ sf.name }}</td>
+				<td>{{ sf.real_name }}</td>
+				<td>{{ sf.pretty_name }}</td>
+				<td>{{ sf.pretty_name_plural }}</td>
+				<td>{{ sf.display_order }}</td>
+				<td>{% if sf.is_many_to_many_lookup %}Many-to-many{% else %}{% if sf.is_lookup %}Single{% else %}No{% endif %}{% endif %}
+			</tr>
+			{% endfor %}
+		</table>
+	{% endfor %}
+</div><!--/content-->
+{% endblock %}

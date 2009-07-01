@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}{% if address_choices %}Did you mean?{% else %}Unknown address{% endif %}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h1>{% if address_choices %}Did you mean&hellip;{% else %}Unknown address{% endif %}</h1>
+	{% if address_choices %}
+		<ul>
+		{% for choice in address_choices %}
+			<li><a href="{{ choice.url|slice:"1:" }}{{ radius_url }}/">{{ choice }}</a></li>
+		{% endfor %}
+		</ul>
+	{% else %}
+		<p>We couldn’t find the address <strong>{{ address }}</strong>. Please try again below, or <a href="../">go back to your search</a>.</p>
+		<form action="" method="get">
+			<input type="hidden" name="radius" value="{{ radius }}">
+			<input type="text" name="address" value="{{ address }}">
+			<input type="submit" value="Search again">
+		</form>
+	{% endif %}
+</div><!--/ #content -->
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% load eb %}
+
+{% block title %}Search: {{ query }}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h1>ZIP not found</h1>
+	<p>We don’t cover the ZIP code {{ query }} in {% METRO_NAME %}.</p>
+	<h3>Available ZIP codes</h3>
+	<ul>
+	  {% for zipcode in zipcode_list %}
+	<li><a href="{{ zipcode.url }}">{{ zipcode.name }}</a></li>
+	  {% endfor %}
+	</ul>
+	<h3>Or try another address search in {% METRO_NAME %}&hellip;</h3>
+	<form action="/search/" method="get">
+		<p><input type="text" name="q" value="{{ query }}"> <input type="submit" value="Search again"></p>
+	</form>
+</div><!--/ #content-->
+{% endblock %}

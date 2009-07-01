@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% load eb eb_filter %}
+
+{% block title %}Select {{ lookup_type }}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h2>
+		<a href="{{ schema.url }}filter/">{{ schema.plural_name|capfirst }}</a>
+		{% for filter in filters.values %} {% if forloop.last %}{{ filter.value|capfirst }}{% else %}<a href="{% filter_breadcrumb_link schema filters.values filter %}">{{ filter.value }}</a> &rsaquo; {% endif %}{% endfor %}
+	</h2>
+	<h2>Select {{ lookup_type }}</h2>
+	{% if lookup_list|length|greaterthan:"100" %}
+		{% regroup lookup_list by name|upper|slice:":1" as alpha_list %}
+		{% for current_letter in alpha_list %}
+			<h2>{{ current_letter.grouper }}</h2>
+				<p id="alpha_{{ current_letter.grouper|lower }}">
+					{% for letter in alpha_list %}
+						{% ifequal letter.grouper current_letter.grouper %}
+							<strong>{{ letter.grouper }}</strong> 
+						{% else %}
+							<a href="#alpha_{{ letter.grouper|lower }}">{{ letter.grouper|upper }}</a> 
+						{% endifequal %}
+					{% endfor %}
+					<a href="#content">&uarr; Top</a>
+				</p>
+				<ul>
+					{% for lookup in current_letter.list %}
+						<li><a href="{{ lookup.slug }}/">{{ lookup.name }}</a></li>
+					{% endfor %}
+				</ul>
+		{% endfor %}
+	{% else %}
+		<ul>
+			{% for lookup in lookup_list %}
+				<li><a href="{{ lookup.slug }}/">{{ lookup.name }}</a></li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+</div>
+{% endblock %}

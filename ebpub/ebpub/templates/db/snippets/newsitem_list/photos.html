@@ -1,0 +1,22 @@
+{% if is_grouped %}
+	<li id="newsitem-{{ newsitem.id }}" class="newsitem photogroup">
+		{% for newsitem in newsitem_list %}<a class="photo" href="{{ newsitem.item_url }}" rel="nofollow"><img width="75" height="75" class="thumbnail" src="{{ newsitem.attribute_values.photo_href }}" alt="{{ newsitem.title }} posted by {{ newsitem.attribute_values.username }} to {{ newsitem.attribute_values.source.name }}" title="{{ newsitem.title }} posted by {{ newsitem.attribute_values.username }} to {{ newsitem.attribute_values.source.name }}"></a>{% endfor %}		
+	</li>
+{% else %}
+	{% for newsitem in newsitem_list %}
+		<li id="newsitem-{{ newsitem.id }}" class="newsitem">
+			<a class="photo" href="{{ newsitem.item_url }}" rel="nofollow"><img width="75" height="75" class="thumbnail" src="{{ newsitem.attribute_values.photo_href }}" alt=""></a>
+			<strong class="title"><a href="{{ newsitem.item_url }}" class="url" rel="nofollow">{{ newsitem.title }}</a></strong>
+			<p class="info">Posted to {{ newsitem.attribute_values.source.name }} by
+				<strong class="username">
+				{% ifequal newsitem.attribute_values.source.name "Panoramio" %}
+					<a href="http://www.panoramio.com/user/{{ newsitem.attribute_values.user_id }}" rel="nofollow">
+				{% endifequal %}
+				{% ifequal newsitem.attribute_values.source.name "Flickr" %}
+					<a href="http://www.flickr.com/photos/{{ newsitem.attribute_values.user_id }}/" rel="nofollow">
+				{% endifequal %}
+				{{ newsitem.attribute_values.username }}</a></strong>
+				on <strong class="dateposted">{{ newsitem.item_date|date:"F j, Y" }}</strong>.</p>
+		</li>
+	{% endfor %}
+{% endif %}

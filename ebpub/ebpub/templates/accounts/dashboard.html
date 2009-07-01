@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% load eb %}
+
+{% block title %}Your account{% endblock %}
+
+{% block extrahead %}
+<script type="text/javascript">
+function remove_saved_place(num, pid) {
+	this.blur();
+	$j('#savedplacestatus' + num).html('Removing...');
+	$j.ajax({
+		type: "POST", url: "/accounts/saved-places/delete/", data: {pid: pid},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			$j('#savedplacestatus' + num).html("Whoops, we had a technical hiccup. Please try again in a bit.");
+		},
+		success: function(data, textStatus) {
+			$j('#savedplace' + num).hide();
+		}
+	});
+}
+$j(function() {
+	$j('.display-toggle').show().click(function() {
+		var url, action;
+		var button = $j(this);
+		if (button.html() == 'Hide') {
+			url = '/accounts/hidden-schemas/add/';
+			action = 'hide';
+			button.html('Hiding...').attr('disabled', 'on');
+			new_button_title = 'Show';
+		} else {
+			url = '/accounts/hidden-schemas/delete/';
+			action = 'show';
+			button.html('Showing...').attr('disabled', 'on');
+			new_button_title = 'Hide';
+		}
+		var schema_slug = /toggle-(.*)/.exec($j(this).attr('id'))[1];
+		$j.ajax({
+			type: "POST", url: url, data: {schema:schema_slug},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("Whoops, we had a technical hiccup. Please try again in a bit.");
+				if (action == 'hide') {
+					button.html('Hide').removeAttr('disabled');
+				} else {
+					button.html('Show').removeAttr('disabled');
+				}
+			},
+			success: function(data, textStatus) {
+				if (action == 'hide') {
+					button.html('Show').removeAttr('disabled');
+					button.parent().addClass('hidden');
+				} else {
+					button.html('Hide').removeAttr('disabled');
+					button.parent().removeClass('hidden');
+				}
+			}
+		});
+		return false;
+	});
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="content">
+  <h1>Your account</h1>
+	<form action="/accounts/logout/" method="post">
+		<p><button type="submit">Log out</button></p>
+	</form>
+	<p>You've had an account since {{ user.creation_date|date:"F j, Y" }}.</p>
+	<p>Logged in as <strong>{{ user.email }}</strong>.</p>
+	
+	{% if custom_message %}
+		<p>{{ custom_message }}</p>
+	{% endif %}
+
+	<div id="display-preferences">
+		<h2>Your timeline display preferences</h2>
+		<p>Choose categories of news for the timeline.</p>
+		<ul>
+		{% for schema in schema_list %}
+			<li{% if schema.is_hidden %}class="hidden"{% endif %}><button class="display-toggle" id="toggle-{{ schema.schema.slug }}">{% if schema.is_hidden %}Show{% else %}Hide{% endif %}</button> <a href="{{ schema.schema.url }}">{{ schema.schema.plural_name|capfirst }}</a></li>
+		{% endfor %}
+		</ul>
+	</div><!--/ #display-preferences -->
+
+	<div id="email-alerts">
+		<h2>Your e-mail alerts</h2>
+		{% if alert_list %}
+			<ul>
+			{% for alert in alert_list %}
+				<li><strong>{{ alert.name }}</strong> ({{ alert.pretty_frequency }}) <a href="{{ alert.unsubscribe_url }}">Unsubscribe</a></li>
+			{% endfor %}
+			</ul>
+		{% else %}
+			<h3>You haven't subscribed to any e-mail alerts yet.</h3>
+			<p>Search for an address, neighborhood or ZIP in {% METRO_NAME %} to subscribe to alerts for news nearby.</p>
+			{% with "Address, ZIP or neighborhood" as placeholder %}
+			<form action="/search/" method="get" onsubmit="if ($j('#alerts-searchinput').val() == '{{ placeholder }}') return false; return true;">
+				<input type="hidden" name="type" value="alert">
+				<p><input type="text" id="alerts-searchinput" name="q" value="{{ placeholder }}" onfocus="if (this.value == '{{ placeholder }}') { this.value = ''; }" onblur="if (this.value == '') { this.value = '{{ placeholder }}'; }"> <input type="submit" value="Search"></p>
+			</form>
+			{% endwith %}
+		{% endif %}
+	</div><!--/ #email-alerts -->
+		
+	<div id="saved-places">
+		<h2>Your saved places</h2>
+		{% if saved_place_list %}
+			<ul>
+				{% for saved_place in saved_place_list %}
+					<li id="savedplace{{ forloop.counter }}">
+						<a href="{{ saved_place.place.url }}">{{ saved_place.place.pretty_name }}</a>
+						<button onclick="remove_saved_place({{ forloop.counter }}, '{{ saved_place.pid }}');">Remove</button>
+						<span id="savedplacestatus{{ forloop.counter }}"></span>
+					</li>
+				{% endfor %}
+			</ul>
+			<p>Tip: To save more places, search for an address, neighborhood or ZIP code and click "Save this place" on the resulting page.</p>
+		{% else %}
+			<h3>You haven't saved any places yet.</h3>
+			<p>Search for an address, neighborhood or ZIP in {% METRO_NAME %} and click "Save this place" on the resulting page.</p>
+			{% with "Address, ZIP or neighborhood" as placeholder %}
+			<form action="/search/" method="get" onsubmit="if ($j('#locations-searchinput').val() == '{{ placeholder }}') return false; return true;">
+				<p><input id="locations-searchinput" type="text" name="q" value="{{ placeholder }}" onfocus="if (this.value == '{{ placeholder }}') { this.value = ''; }" onblur="if (this.value == '') { this.value = '{{ placeholder }}'; }"> <input type="submit" value="Search"></p>
+			</form>
+			{% endwith %}
+		{% endif %}
+	</div><!--/ #saved-places -->
+</div>
+{% endblock %}

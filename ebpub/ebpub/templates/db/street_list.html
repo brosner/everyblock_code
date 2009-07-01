@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% load eb %}
+
+{% block title %}Streets{% if city %} in {{ city.name }}{% endif %}{% endblock %}
+
+{% block extrahead %}
+<meta name="description" content="Full list of streets in {% METRO_NAME %}.">
+{% endblock %}
+
+{% block content %}
+<div id="content">
+	{% if city %}
+	<p>
+		<a href="/streets/">Streets</a>
+	</p>
+	{% endif %}
+	<h1>Streets{% if city %} in {{ city.name }}{% endif %}</h1>
+	<p>Choose a street to find recent news near an individual block. You can also <a href="/locations/">browse by locations</a> such as neighborhoods.</p>
+	{% regroup street_list by street|upper|slice:":1" as alpha_list %}
+	{% for current_letter in alpha_list %}
+		<h2>{{ current_letter.grouper }}</h2>
+		<p id="alpha_{{ current_letter.grouper|lower }}">
+			{% for letter in alpha_list %}{% ifequal letter.grouper current_letter.grouper %}<strong>{{ letter.grouper }}</strong>{% else %}<a href="#alpha_{{ letter.grouper|lower }}">{{ letter.grouper|upper }}</a>{% endifequal %}{% endfor %}
+			<a href="#content">&uarr; Top</a>
+		</p>
+		{% for street_bunch in current_letter.list|bunchlong:"4" %}
+			<ul>
+				{% for street in street_bunch %}
+				<li><a href="{{ street.url }}">{{ street.pretty_name }}</a></li>
+				{% endfor %}
+			</ul>
+		{% endfor %}
+	{% endfor %}
+</div><!--/content-->
+{% endblock %}

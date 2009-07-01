@@ -1,0 +1,7 @@
+Using mapnik XML in its provided OGC/WMS server:
+
+http://lists.berlios.de/pipermail/mapnik-devel/2007-July/000201.html
+
+Mapnik build statement (Ubuntu Gutsy Gibbon):
+
+python scons/scons XMLPARSER=libxml2 PGSQL_INCLUDES=/usr/include/postgresql PGSQL_LIBS=/usr/lib

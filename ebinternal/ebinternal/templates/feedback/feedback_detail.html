@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback #{{ feedback.id }}{% endblock %}
+
+{% block extrahead %}
+{% include "includes/feedback_ajax.html" %}
+<script type="text/javascript">
+var canned_responses = {
+	{% for can in canned_response_list %}{{ can.id }}: '{{ can.message|escapejs }}',
+	{% endfor %}
+};
+var signature = "\n\n{{ staff_first_name|escapejs }}\n\n--\n{{ staff_full_name|escapejs }}";
+function clear_ignored(feedback_id) {
+	$j('#ignorebutton').html('Ignored.');
+}
+$j(function() {
+	$j('#cannedbutton').click(function(event) {
+		var val = $j('#cannedselect').val();
+		if (val) {
+			$j('#response').val(canned_responses[val] + signature);
+		}
+	});
+	$j('#addsigbutton').click(function(event) {
+		$j('#response').val($j('#response').val() + signature);
+	});
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<p class="breadcrumb"><a href="../../">Internal</a> / <a href="../">Feedback</a></p>
+
+<div class="message">
+<table class="attributetable">
+	<tr><th>City</th><td>{{ feedback.city|default:"Unknown" }}</td></tr>
+	<tr><th>Page URL</th><td>{% if feedback.page_url %}<a href="{{ feedback.page_url }}">{{ feedback.page_url }}</a>{% else %}Unknown{% endif %}</td></tr>
+	<tr><th>IP address</th><td>{{ feedback.ip_address|default:"Unknown" }}</td></tr>
+	<tr><th>E-mail</th><td>{{ feedback.email|default:"Anonymous" }}
+	<tr><th>Received</th><td>{{ feedback.date_received|date:"n/j/Y g:i A" }}</td></tr>
+	<tr><th>Category</th><td>
+		<div id="cat{{ feedback.id }}">
+		<span class="category">{{ feedback.category.name|default:"None" }}</span>
+		<div class="form" style="display: none;">{{ category_form.category }}<button class="cat-change">Change</button></div>
+		<span class="val" style="display: none;">{{ feedback.category.id }}</span>
+		</div>
+	</td></tr>
+	{% if feedback.date_responded %}<tr><th>Responded</th><td>{{ feedback.date_responded|date:"n/j/Y g:i A" }}</td></tr>{% endif %}
+</table>
+
+<blockquote>
+	<p>{{ feedback.message|linebreaksbr }}</p>
+</blockquote>
+</div><!--/ .message -->
+
+{% if feedback.date_responded %}
+	{% if feedback.is_ignored %}<p><strong>Ignored by {{ feedback.responder }} on {{ feedback.date_responded|date:"n/j/Y" }}</strong>.</p>{% endif %}
+	{% for response in response_list %}
+		<div class="response">
+			<p><strong>Response from {{ response.from_email }} on {{ response.date_sent|date:"n/j/Y" }}:</strong></p>
+			<blockquote><p>{{ response.message|linebreaksbr }}</p></blockquote>
+		</div>
+	{% endfor %}
+{% else %}
+	{% if feedback.assigned_to %}<p><strong>{{ feedback.assigned_to }} has claimed responsibility for this response</strong>.</p>{% endif %}
+	<div class="toolbar">
+		<button id="ignorebutton" class="left" onclick="ignore_feedback({{ feedback.id }}, clear_ignored, this);">✖ Ignore</button>
+
+		<form class="left" action="" method="post">
+			<input type="hidden" name="claim" value="1">
+			<button type="submit">✔ Claim responsibility</button>
+		</form>
+	</div><!--/ .toolbar -->
+	<div class="toolbar">
+		{% if feedback.email %}
+		<select id="cannedselect">
+			<option value="">Canned responses...</option>
+			{% for can in canned_response_list %}
+			<option value="{{ can.id }}">{{ can.name }}</option>
+			{% endfor %}
+		</select> <button id="cannedbutton">Use canned response</button> | <button id="addsigbutton">Add signature</button>
+		<form class="clear" action="" method="post">
+			<textarea name="response" id="response" rows="20" cols="80"></textarea><br>
+			<button class="clear" type="submit">↪ Respond</button>
+		</form>
+		{% endif %}
+	</div>
+{% endif %}
+{% endblock %}

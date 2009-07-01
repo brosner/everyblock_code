@@ -1,0 +1,30 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}History for {{ slug }}{% endblock %}
+
+{% block content %}
+
+<h1>History for <a href="{{ page_list.0.url }}">{{ slug }}</a></h1>
+
+<table class="history">
+	<thead>
+		<tr>
+			<th>Revision</th>
+			<th>Date</th>
+			<th>User</th>
+			<th>Message</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for page in page_list %}
+		<tr>
+			<td class="revision"><a class="version button default" href="{{ page.version_url }}">{{ page.version }}</a> <a class="diff button" href="{{ page.diff_url }}">Changes</a></td>			
+			<td class="date">{{ page.change_date|date:"F j, Y, P" }}</td>
+			<td class="user">{{ page.change_user }}</td>
+			<td class="message">{{ page.change_message|escape }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+{% endblock %}

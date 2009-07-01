@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Archives / {{ month|date:"F Y" }}{% endblock %}
+
+{% block content %}
+
+<h1>{{ month|date:"F Y" }}</h1>
+
+{% for object in object_list %}
+<div class="post">
+	<h2 class="title"><a class="url" href="{{ object.url }}">{{ object.headline }}</a></h2>
+	<p class="dateline">Posted <span class="date">{{ object.pub_date|date:"F j, Y" }}</span> by <strong class="author">{{ object.author }}</strong></p>
+	<div class="body">
+		{{ object.body|safe }}
+	</div>
+</div><!--/post-->
+{% endfor %}
+
+{% endblock %}

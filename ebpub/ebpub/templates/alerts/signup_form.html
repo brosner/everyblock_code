@@ -1,0 +1,37 @@
+{% extends "base_place.html" %}
+
+{% block title %}E-mail alerts for {{ place.pretty_name }}{% endblock %}
+
+{% block header %}E-mail alerts for {{ place.pretty_name }}{% endblock %}
+
+{% block place_content %}
+<div id="content">
+	<p>Get notified when new information around <a href="../">{{ place.pretty_name }}</a> is posted.</p>
+	{% if form.errors %}<p class="error">There was an error with your submission. Please check for errors in the form below.</p>{% endif %}
+	<h2>Subscribe to e-mail alerts</h2>
+	<h3>Enter your e-mail address and choose a frequency&hellip;</h3>
+	{% if USER_EMAIL %}
+	<form action="/accounts/logout/" method="post">
+		<p>E-mail address: <strong>{{ USER_EMAIL }}</strong> <input type="hidden" name="next_url" value="{{ place.alert_url }}"><button type="submit">Log out to change</button></p>
+	</form>
+	<form action="" method="post">
+	{% else %}
+	<form action="" method="post">
+	  {% if form.email.errors %}<p class="error">Please enter a valid e-mail address.</p>{% endif %}
+	  <p>{{ form.email }}</p>
+	{% endif %}
+		<h2>Frequency:</h2>
+		{{ form.frequency }}
+		<h3>Customize your news&hellip;</h3>
+		{% if form.selected_schemas.errors %}<p class="error">Please choose at least one data type.</p>{% endif %}
+		{{ form.displayed_schemas }}
+		{{ form.selected_schemas }}
+		<p><label>{{ form.include_new_schemas }} As new types of information are published, include those new types of information in my alerts</label></p>
+		{% if is_block %}
+		  <h2>Radius:</h2>
+		  {{ form.radius }}
+		{% endif %}
+		<p><input type="submit" value="Subscribe to alerts"></p>
+	</form>
+</div>
+{% endblock %}

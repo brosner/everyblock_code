@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% load eb humanize mapping %}
+
+{% block fulltitle %}EBPUB{% endblock %}
+
+{% block content %}
+<div id="content">
+	<div id="intro">
+		<div id="intro-search">
+			<h2>Search for news</h2>
+			{% with "Address, ZIP or neighborhood" as placeholder %}
+			<form action="/search/" method="get" onsubmit="if ($j('#homepage-searchinput').val() == '{{ placeholder }}') return false; return true;">
+				<p class="form"><input id="homepage-searchinput" type="text" name="q" value="{{ placeholder }}" onfocus="if (this.value == '{{ placeholder }}') { this.value = ''; }" onblur="if (this.value == '') { this.value = '{{ placeholder }}'; }"> <input type="submit" value="Search"></p>
+			</form>
+			{% endwith %}
+		</div>
+		<div id="intro-explore">
+			<h2>Locations</h2>
+			<ul>
+				{% for location_type in location_type_list %}
+					<li><strong class="number">{{ location_type.count|intcomma }}</strong> <a href="{{ location_type.url }}">{{ location_type.plural_name|capfirst }}</a></li>
+				{% endfor %}
+				<li><strong class="number">{{ street_count|intcomma }}</strong> <a href="/streets/">Streets</a></li>
+			</ul>
+		</div><!--/ #intro-explore-->
+	</div><!--/ #intro -->
+	{% if featured_neighborhood %}
+	<div id="featured-neighborhood">
+		<h2>Featured neighborhood</h2>
+		<h3><a href="{{ featured_neighborhood.url }}">{{ featured_neighborhood.name }}</a></h3>
+		<div id="fn-recentarticles">
+		  <h4>Recent articles in {{ featured_neighborhood.name }}</h4>
+			{% if featured_neighborhood_articles %} 
+				<ul class="newsitemlist">
+					{% for article in featured_neighborhood_articles %}
+					<li class="newsitem">
+						<strong class="title"><a href="{{ article.item_url }}" class="url">{{ article.title }}</a></strong>
+						<span class="location">{{ article.location_name }}</span>
+						<blockquote class="excerpt"><p>{{ article.attribute_values.excerpt }}</p></blockquote>
+						<p class="info"><strong class="date">{{ article.item_date|date:"F j" }}</strong> {{ article.attribute_values.source.name }}</p>
+					</li>
+					{% endfor %}
+				</ul>
+				<p><strong>{{ featured_neighborhood_article_count|intcomma }}</strong> <a href="/news-articles{{ featured_neighborhood.url }}">more article{{ featured_neighborhood_article_count|pluralize }} in {{ featured_neighborhood.name }}</a> in the last 30 days.</p>
+			{% else %} 
+				<p><a href="/news-articles{{ featured_neighborhood.url }}">View articles in {{ featured_neighborhood.name }}…</a></p> 
+			{% endif %}
+		</div><!--/ .pane#fn-recentarticles -->
+		<div id="fn-publicrecords">
+		  <h4>Public records in {{ featured_neighborhood.name }}</h4>
+			{% if fn_non_empty_date_charts %}
+			<p>New in the last 30 days</p>
+			{% for chart_bunch in fn_non_empty_date_charts|bunchlong:"2" %}
+			<ul>
+				{% for chart in chart_bunch %}
+				<li>
+					<strong>{{ chart.total_count|intcomma }}</strong> <a href="{{ chart.schema.url }}locations/neighborhoods/{{ featured_neighborhood.slug }}/">{% filter capfirst %}{% schema_plural_name chart.schema chart.total_count %}{% endfilter %}</a>
+				</li>
+				{% endfor %}
+			</ul>
+			{% endfor %}
+			{% endif %}
+			{% if fn_empty_date_charts %}
+			<p>More: {% for chart in fn_empty_date_charts %}<a href="{{ chart.schema.url }}locations/neighborhoods/{{ featured_neighborhood.slug }}/">{{ chart.schema.plural_name|capfirst }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+			{% endif %}
+		</div><!--/ #fn-publicrecords -->
+	</div><!--/ #featured-neighborhood -->
+	{% endif %}
+	<div id="public-records">
+		<h2>Public records</h2>
+		<p>New in the last 30 days</p>
+		{% if non_empty_date_charts %}
+		<ul>
+			{% for chart in non_empty_date_charts %}
+			<li>
+				<strong>{{ chart.total_count|intcomma }}</strong> <a href="{{ chart.schema.url }}">{% filter capfirst %}{% schema_plural_name chart.schema chart.total_count %}{% endfilter %}</a>
+			</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+		{% if empty_date_charts %}
+		<p>More: {% for chart in empty_date_charts %}<a href="{{ chart.schema.url }}">{{ chart.schema.plural_name|capfirst }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+		{% endif %}
+	</div><!--/ #public-records -->
+	<div id="more">
+		<h2>More news</h2>
+		<ul>
+		{% for schema in more_schemas %}
+			<li><a href="{{ schema.url }}">{{ schema.plural_name|capfirst }}</a></li>
+		{% endfor %}
+		</ul>
+  </div><!--/ #more -->
+</div><!--/ #content -->
+{% endblock %}

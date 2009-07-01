@@ -1,0 +1,17 @@
+{% extends "wiki/base.html" %}
+
+{% block title %}Orphaned pages{% endblock %}
+
+{% block content %}
+
+<h1>Orphaned pages</h1>
+
+<ul>
+{% for page in orphans %}
+    <li>
+        <a href="{{ page.url }}">{{ page.headline }}</a>
+    </li>
+{% endfor %}
+</ul>
+
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback{% endblock %}
+
+{% block extrahead %}
+{% include "includes/feedback_ajax.html" %}
+<style type="text/css" media="screen">
+  .toggle {
+    font-size: 0.6875em;
+  }
+  .toggle a {
+    color: rgba(255, 255, 255, .25);
+  }
+  .message {
+    display: none;
+  }
+  .message td {
+    background: rgba(0, 0, 0, .25);
+  }
+  .message td p {
+    margin: 0.25em 0;
+  }
+  table td {
+    font-size: 0.75em;
+  }
+  table td.email {
+    font-size: 0.875em;
+  }
+</style>
+<script type="text/javascript" charset="utf-8">
+function toggle_message(button, message_id) {
+	var uarr = String.fromCharCode(0x25b6);
+	var darr = String.fromCharCode(0x25bc);
+	button.innerHTML = button.innerHTML == uarr ? darr : uarr;
+	$j('tr#message' + message_id).toggle();
+}
+function clear_ignored(feedback_id) {
+	$j('#row' + feedback_id).hide();
+	$j('#message' + feedback_id).hide();
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<p class="breadcrumb"><a href="../">Internal</a></p>
+   
+<h1>Feedback</h1>
+
+<h2>Unhandled ({{ open_list|length }})</h2>
+
+{% if open_list %}
+	<table>
+		<thead>
+			<tr>
+			  <th>&nbsp;</th>
+				<th>City</th>
+				<th>E-mail</th>
+				<th>Received</th>
+				<th>Category</th>
+				<th>Responsible</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for feedback in open_list %}
+			<tr id="row{{ feedback.id }}" {% if not feedback.email %} class="anonymous"{% endif %}>
+				<td class="toggle"><a href="#" onclick="toggle_message(this, {{ feedback.id }}); return false;">&#x25b6;</a></td>
+				<th>{{ feedback.city|default:"unknown" }}</th>
+				<td class="email"><a href="{{ feedback.id }}/">{{ feedback.email|default:"anonymous" }}</a></td>
+				<td class="date"><nobr>{{ feedback.date_received|date:"n/j/Y g:i A" }}</nobr></td>
+				<td>
+					<div id="cat{{ feedback.id }}">
+					<span class="category">{{ feedback.category.name|default:"None" }}</span>
+					<div class="form" style="display: none;">{{ category_form.category }}<button class="cat-change">Change</button></div>
+					<span class="val" style="display: none;">{{ feedback.category.id }}</span>
+					</div>
+				</td>
+				<td>{{ feedback.assigned_to }}</td>
+				<td><button onclick="ignore_feedback({{ feedback.id }}, clear_ignored, this);">Ignore</button></td>
+			</tr>
+			<tr class="message" id="message{{ feedback.id }}">
+				<td colspan="6">
+					<p>{{ feedback.message|linebreaksbr }}</p>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+	<p>None!</p>
+{% endif %}
+<h2>Latest {{ closed_list|length }} handled</h2>
+
+<table>
+	<thead>
+		<tr>
+		  <th>&nbsp;</th>
+			<th>City</th>
+			<th>E-mail</th>
+			<th>Received</th>
+			<th>Category</th>
+			<th>Responder</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for feedback in closed_list %}
+		<tr{% if not feedback.email %} class="anonymous"{% endif %}>
+  		<td class="toggle"><a href="#" onclick="toggle_message(this, {{ feedback.id }}); return false;">&#x25b6;</a></td>
+			<th>{{ feedback.city|default:"unknown" }}</th>
+			<td class="email"><a href="{{ feedback.id }}/">{{ feedback.email|default:"anonymous" }}</a></td>
+			<td class="date"><nobr>{{ feedback.date_received|date:"n/j/Y g:i A" }}</nobr></td>
+			<td>
+				<div id="cat{{ feedback.id }}">
+				<span class="category">{{ feedback.category.name|default:"None" }}</span>
+				<div class="form" style="display: none;">{{ category_form.category }}<button class="cat-change">Change</button></div>
+				<span class="val" style="display: none;">{{ feedback.category.id }}</span>
+				</div>
+			</td>
+			<td>{{ feedback.responder }}</td>
+		</tr>
+		<tr class="message" id="message{{ feedback.id }}">
+		  <td colspan="6">
+		    <p>{{ feedback.message|linebreaksbr }}</p>
+		  </td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

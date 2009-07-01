@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+
+{% load eb %}
+
+{% block title %}Geocoder success rates{% endblock %}
+
+{% block content %}
+<div id="content">
+	<p><a href="../">{% METRO_NAME %} admin</a></p>
+
+	<h1>Geocoder success rates</h1>
+
+	<table>
+		<tr><th>Schema</th><th>Success rate</th><th>Geocoded</th><th>Total</th></tr>
+		{% for schema in schema_list %}
+			<tr>
+				<td>{{ schema.name|capfirst }}</td>
+				<td>{{ schema.ratio|floatformat:3 }}</td>
+				<td>{{ schema.geocoded }}</td>
+				<td>{{ schema.total }}</td>
+			</tr>
+		{% endfor %}
+	</table>
+</div><!--/content-->
+{% endblock %}

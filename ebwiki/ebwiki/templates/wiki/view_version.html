@@ -1,0 +1,19 @@
+{% extends "wiki/base.html" %}
+
+{% load wiki %}
+
+{% block title %}Version {{ page.version }} of {{ page.headline|escape }}{% endblock %}
+
+{% block content %}
+
+<h1>Version {{ page.version }} of {{ page.headline|escape }}</h1>
+
+{{ page.content|markdown|safe }}
+
+{% endblock %}
+
+{% block footer %}
+<div id="footer">
+	<p class="page-tools"><a class="button" href="{{ page.history_url }}">Other versions of this page</a></p>
+</div>
+{% endblock %}

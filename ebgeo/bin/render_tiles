@@ -1,0 +1,175 @@
+#!/usr/bin/env python
+import sys
+import os
+import math
+import pickle
+import logging
+from TileCache.Layer import Tile
+from processing import Process, Queue, RLock
+#from ebgeo.maps.tilecache_service import EBService as Service
+#from ebgeo.maps.shortcuts import get_all_tile_coords
+from ebgeo.utils.progressbar import TimedProgressBar
+
+counter_lock = RLock()
+
+class Counter(object):
+    """
+    Simple multi-process-safe counter
+    """
+    def __init__(self, start=0, inc=1):
+        self.count = start
+        self._inc = inc
+
+    def update(self, increment=True):
+        counter_lock.acquire()
+        try:
+            val = increment and self._inc or -self._inc
+            self.count += val
+            i = self.count
+            return i
+        finally:
+            counter_lock.release()
+
+    def inc(self):
+        return self.update()
+
+    def dec(self):
+        return self.update(increment=False)
+
+    def __call__(self):
+        return self.inc()
+
+class EBQueue(object):
+    """
+    A thin wrapper around the standard Queue object, implementing
+    simply ``get``, ``put``, and ``task_done``.
+    """
+    def __init__(self):
+        self._q = Queue()
+        self._c = Counter()
+
+    def get(self):
+        payload = self._q.get()
+        if payload is None:
+            return None
+        return (payload, None)
+
+    def put(self, item):
+        self._q.put(item)
+        self._c()
+
+    def task_done(self, msg):
+        self._c.dec()
+
+    def __len__(self):
+        return self._c.count
+
+class RenderProcess(Process):
+    def __init__(self, svc, layer, queue, counter, progressbar):
+        Process.__init__(self)
+        self.svc = svc
+        self.layer = layer
+        self.queue = queue
+        self.queue_size = len(self.queue)
+        self.counter = counter
+        self.progressbar = progressbar
+
+    def run(self):
+        for ((x, y, z), q_item) in iter(self.queue.get, None):
+            tile = Tile(self.layer, x, y, z)
+
+            try:
+                self.svc.renderTile(tile)
+            except IOError:
+                logging.debug('Caught an IOError from PIL at %r' % ((x, y, z),))
+                pass
+            else:
+                self.progressbar(self.counter())
+
+            self.queue.task_done(q_item)
+
+def queue_tiles(queue, layer, city=None, levels=None, num_procs=1):
+    logging.info('Queuing tiles to render')
+
+    for (x, y, z) in get_all_tile_coords(layer, cities=city, levels=levels):
+        queue.put((x, y, z))
+
+    # Add sentinels for each process (necessary for the Queue objects)
+    for i in xrange(num_procs):
+        queue.put(None)
+
+    logging.info('Queue has %s tiles' % len(queue))
+
+def render(svc, layer, queue, progressbar, num_procs=1):
+    logging.info('Beginning render for layer %s' % layer.name)
+
+    workers = []
+    counter = Counter()
+
+    for i in xrange(num_procs):
+        p = RenderProcess(svc, layer, queue, counter, progressbar)
+        p.setName('RenderProcess #%s' % i)
+        p.setDaemon(True)
+        p.start()
+        workers.append(p)
+
+    for w in workers:
+        # Block until all the processes have finished.
+        w.join()
+
+    logging.info('Render complete.')
+
+def main(argv=None):
+    from optparse import OptionParser
+
+    if argv is None:
+        argv = sys.argv[1:]
+
+    p = OptionParser('Usage: %prog [<options>] /path/to/config <layername>')
+    p.add_option('-s', '--start', dest='start', type='int', default=0,
+                 help='starting zoom level')
+    p.add_option('-t', '--stop', dest='stop', type='int', default=5,
+                 help='ending zoom level',)
+    p.add_option('-c', '--city', dest='city',
+                 help='only render this city\'s tiles (use city slug)')
+    p.add_option('-v', '--verbose', dest='log_level', action='store_const',
+                 const=logging.INFO)
+    p.add_option('-D', '--debug', dest='log_level', action='store_const',
+                 const=logging.DEBUG)
+    p.add_option('-n', '--num-procs', dest='num_procs', type='int',
+                 help='number of render processes (defaults to 1)')
+    opts, args = p.parse_args(argv)
+
+    if len(args) < 2:
+        p.error('must give path to config and a layer name')
+    
+    cfgfile = args[0]
+    if not os.path.exists(cfgfile):
+        p.error('config file doesn\'t exist: %r' % cfgfile)
+    svc = Service.load(cfgfile)
+
+    name = args[1]
+    if not svc.layers.has_key(name):
+        p.error('unknown layer %r' % name)
+    layer = svc.layers[name]
+
+    if opts.start is None:
+        opts.start = 0
+    if opts.stop is None:
+        opts.stop = len(layer.resolutions)
+
+    logging.basicConfig(level=opts.log_level,
+                        format="%(asctime)s %(levelname)s %(message)s")
+
+    q = EBQueue()
+    queue_tiles(q, layer, city=opts.city, levels=(opts.start, opts.stop),
+                num_procs=opts.num_procs)
+    pb = TimedProgressBar(min_val=0, max_val=len(q))
+    pb.start()
+    try:
+        render(svc, layer, q, pb, num_procs=opts.num_procs)
+    except KeyboardInterrupt:
+        return
+
+if __name__ == '__main__':
+    sys.exit(main())

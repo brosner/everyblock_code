@@ -1,0 +1,16 @@
+<dl>
+    <dt>Summary</dt>
+    <dd>
+        {% if obj.change_message %}
+        {{ obj.change_message|escape }}
+        {% else %}
+        <i>No summary given.</i>
+        {% endif %}
+    </dd>
+
+    <dt>Version</dt>
+    <dd>
+        <a href="{{ obj.version_url }}">{{ obj.version }}</a>
+        (<a href="{{ obj.diff_url }}">Changes</a>)
+    </dd>
+</dl>

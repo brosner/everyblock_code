@@ -1,0 +1,35 @@
+{% extends "wiki/base.html" %}
+
+{% load wiki %}
+
+{% block title %}{{ source.data_type.name }} in {{ source.city.name }}{% endblock %}
+
+{% block content %}
+
+<h1><a href="../../../">Data feeds</a> / <a href="{{ source.city.url }}">{{ source.city.name }}</a> / {{ source.data_type.name }}</h1>
+
+<table>
+<tr><th>PP status</th><td><a href="../../../pp_status/">{{ source.get_pp_status_display }}</a></td></tr>
+<tr><th>Tech status</th><td><a href="../../../tech_status/">{{ source.get_tech_status_display }}</a></td></tr>
+<tr><th>Web site</th><td>{% if source.web_site %}<a href="/r/?url={{ source.web_site|urlencode }}">{{ source.web_site }}</a>{% else %}None{% endif %}</td></tr>
+<tr><th>Contact name</th><td>{% if source.contact_name %}{{ source.contact_name }}{% else %}None{% endif %}</td></tr>
+<tr><th>Contact phone</th><td>{% if source.contact_phone %}{{ source.contact_phone }}{% else %}None{% endif %}</td></tr>
+<tr><th>Contact e-mail</th><td>{% if source.contact_email %}{{ source.contact_email }}{% else %}None{% endif %}</td></tr>
+</table>
+
+{% if source.next_step %}<h2>Next step</h2>{{ source.next_step|markdown|safe }}{% endif %}
+{% if source.notes %}<h2>Notes</h2>{{ source.notes|markdown|safe }}{% endif %}
+{% if source.fields_to_include %}<h2>Fields to include</h2>{{ source.fields_to_include|markdown|safe }}{% endif %}
+{% if source.newsitem_headline_template %}<h2>Headline for newsitem_detail</h2>{{ source.newsitem_headline_template|markdown|safe }}{% endif %}
+{% if source.summary_text_newsitem_detail %}<h2>Summary for newsitem_detail</h2>{{ source.summary_text_newsitem_detail|markdown|safe }}{% endif %}
+{% if source.schema_description %}<h2>Schema description</h2>{{ source.schema_description|markdown|safe }}{% endif %}
+
+{% endblock %}
+
+{% block footer %}
+<div id="footer">
+	<p class="page-tools">
+		<a class="button default" href="{{ source.edit_url }}">Edit</a>
+	</p>
+</div><!--/footer-->
+{% endblock %}

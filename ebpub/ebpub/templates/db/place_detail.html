@@ -1,0 +1,178 @@
+{% extends "base_place.html" %}
+
+{% load eb %}
+
+{% block title %}News {% if is_block %}near{% else %}in{% endif %} {{ place.pretty_name }}{% if is_block %}, {{ place.city_object.name }}{% endif %}{% endblock %}
+
+{% block extrahead %}
+{% ifnotequal place.slug "unknown" %}<link rel="alternate" type="application/rss+xml" title="RSS" href="{{ place.rss_url }}" />{% endifnotequal %}
+<meta name="description" content="Recent news {% if is_block %}near{% else %}in{% endif %} {{ place.pretty_name }}{% if is_block %} in {{ place.city_object.name }}{% endif %}.">
+{{ block.super }}
+<script type="text/javascript" charset="utf-8">
+window.onload = function() {
+	$j('#sectionfilterbutton').click(function() {
+		var url = $j('#sectionfilter').val();
+		if (url) { window.location = url; }
+	});
+	{% if USER %}
+	$j('#saveplacebutton').show().click(function() {
+		this.blur();
+		var action, result, url, button;
+		if ($j('#saveplacebutton').html().search('Remove')) {
+			action = 'Saving';
+			result = 'Saved';
+			url = '/accounts/saved-places/add/';
+			button = 'Remove this saved place';
+		}
+		else {
+			action = 'Removing';
+			result = 'Removed';
+			url = '/accounts/saved-places/delete/';
+			button = 'Save this place';
+		}
+		$j('#saveplacestatus').html(action + '...');
+		$j.ajax({
+			type: "POST", url: url, data: {pid:'{% if is_block %}b:{{ place.id }}.{{ block_radius }}{% else %}l:{{ place.id }}{% endif %}'},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				$j('#saveplacestatus').html("Whoops, we had a technical hiccup. Please try again in a bit.");
+			},
+			success: function(data, textStatus) {
+				$j('#saveplacestatus').html(result + '.');
+				$j('#saveplacebutton').html(button);
+				$j('#ul-saved').html('<li class="replaceme">Loading...</li>');
+			}
+		});
+	});
+	$j('.toggle').click(function() {
+		var url, action, on_success, on_error;
+		var container = $j(this).parents('h4');
+		var link = container.find('.toggle');
+		var schema_slug = /(.*?)-\d+/.exec(container.attr('id'))[1];
+		if (container.hasClass('hidden')) {
+			action = 'show';
+		} else {
+			action = 'hide';
+		}
+		if (action == 'hide') {
+			url = '/accounts/hidden-schemas/add/';
+			$j('h4.schema_' + schema_slug + ' .extra .toggle.hide').html('Hiding...');
+			on_success = function(data, textStatus) {
+				$j('h4.schema_' + schema_slug + ' .extra .toggle.hide').html('Hide');
+				$j('h4.schema_' + schema_slug).addClass('hidden').removeClass('visible');
+				$j('div.schema_' + schema_slug).addClass('hidden').removeClass('visible');
+			};
+			on_error = function(XMLHttpRequest, textStatus, errorThrown) {
+				$j('h4.schema_' + schema_slug + ' .extra .toggle.hide').html('Hide');
+			};
+		} else {
+			url = '/accounts/hidden-schemas/delete/';
+			$j('h4.schema_' + schema_slug + ' .extra .toggle.show').html('Showing...');
+			on_success = function(data, textStatus) {
+				$j('h4.schema_' + schema_slug + ' .extra .toggle.show').html('Show');
+				$j('h4.schema_' + schema_slug).removeClass('hidden').addClass('visible');
+				$j('div.schema_' + schema_slug).removeClass('hidden').addClass('visible');
+			};
+			on_error = function(XMLHttpRequest, textStatus, errorThrown) {
+				$j('h4.schema_' + schema_slug + ' .extra .toggle.hide').html('Show');
+			};
+		}
+		$j.ajax({
+			type: "POST", url: url, data: {schema:schema_slug},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("Whoops, we had a technical hiccup. Please try again in a bit.");
+				on_error(XMLHttpRequest, textStatus, errorThrown);
+			},
+			success: on_success
+		});
+		return false;
+	});
+	$j('h4.unloaded').removeClass('unloaded');
+	{% endif %}
+}
+</script>
+{% endblock %}
+
+{% block breadcrumbs %}
+	{% get_metro %}
+	{% if is_block %}
+		<a href="/streets/">Streets</a>
+		{% if METRO.multiple_cities %}<a href="/streets/{{ place.city_object.slug }}/">{{ place.city_object.name }}</a>{% endif %}
+		<a href="{{ place.street_url }}">{{ place.street_pretty_name }}</a>
+	{% else %}
+		<a href="{{ place.location_type.url }}">{{ place.location_type.plural_name|capfirst }}</a>
+	{% endif %}
+{% endblock %}
+
+{% block header %}
+	{% if is_block %}{{ place.from_num }} – {{ place.to_num }} block of {% if place.predir %}{{ place.predir }}. {% endif %}{{ place.street_pretty_name }}{% if place.postdir %} {{ place.postdir }}.{% endif %}
+	{% else %}{{ place.name }}
+	{% endif %}
+{% endblock %}
+
+{% block place_content %}
+{% ifnotequal place.slug "unknown" %}
+	<p>Stay up to date: <a href="{{ place.url }}feeds/">Custom RSS feeds</a> <a href="{{ place.alert_url }}">E-mail alerts</a></p>
+	<ul>
+		<li><strong>Timeline</strong></li>
+		<li><a href="overview/" rel="nofollow">Overview</a></li>
+	</ul>
+	{% if is_block %}
+	<p>Show news within:</p>
+	<ul>
+		<li>{% ifequal block_radius "1" %}1 block{% else %}<a href="?radius=1" rel="nofollow">1 block</a>{% endifequal %}</li>
+		<li>{% ifequal block_radius "3" %}3 blocks{% else %}<a href="?radius=3" rel="nofollow">3 blocks</a>{% endifequal %}</li>
+		<li>{% ifequal block_radius "8" %}8 blocks{% else %}<a href="?radius=8" rel="nofollow">8 blocks</a>{% endifequal %}</li>
+	</ul>
+	{% endif %}
+	<p>Search nearby:</p>
+	<select id="sectionfilter">
+		<option value="">Choose a type of information&hellip;</option>
+		{% for schema in filtered_schema_list %}
+			<option value="{{ schema.url }}{{ place.url|slice:"1:" }}">{{ schema.plural_name|capfirst }}</option>
+		{% endfor %}
+	</select>
+	<button id="sectionfilterbutton">Go</button>
+	{% if USER %}
+	<button id="saveplacebutton" style="display: none;">{% if is_saved %}Remove this saved place{% else %}Save this place{% endif %}</button><span id="saveplacestatus"></span>
+	{% endif %}
+{% endifnotequal %}
+
+<div id="content">
+	{% if newsitem_list %}
+		{% regroup newsitem_list by pub_date|friendlydate as newsitem_list_byday %}
+		{% for daygroup in newsitem_list_byday %}
+			<h2>New {{ daygroup.grouper }} {{ daygroup.list.0.pub_date|date:"F j, Y" }}</h2>
+			{% regroup daygroup.list by schema as newsitem_list_byschema %}
+			{% for schemagroup in newsitem_list_byschema %}
+				{% with schemagroup.list|length as num_newsitems %}
+					{% with hidden_schema_list|contains:schemagroup.grouper as is_hidden %}
+				<h4 class="{% if is_hidden %}hidden{% else %}visible{% endif %}" id="{{ schemagroup.grouper.slug }}-{{ schemagroup.list.0.pub_date|date:"Ymd" }}">
+					{% if schemagroup.grouper.is_special_report %}Special report: {{ schemagroup.grouper.name }}{% else %}{{ num_newsitems }} {% schema_plural_name schemagroup.grouper num_newsitems %}{% endif %}
+					{% if USER %}<a class="toggle show" href="#">Show</a>{% endif %}
+				</h4>
+				<div class="{% if is_hidden %}hidden{% else %}visible{% endif %}">
+					<ul>
+					{% newsitem_list_by_schema schemagroup.list %}
+					</ul>
+				</div>
+				{% endwith %}
+				{% endwith %}
+			{% endfor %}
+		{% endfor %}
+	  <p>
+			{% if not is_latest_page %}<a href="./">&larr; Most recent news for {{ place.pretty_name }}</a>{% endif %}
+			{% if next_day %}<a href="?start={{ next_day|date:"n/j/Y" }}" rel="nofollow">Older news &rarr;</a>{% endif %}
+    </p>
+	{% else %}
+		<p>We haven't found any news available for this area recently.</p>
+	{% endif %}
+
+	{% ifnotequal place.slug "unknown" %}
+		<h2>Sign up for:</h2>
+		<ul>
+			<li><a class="email" href="{{ place.alert_url }}">E-mail alerts</a></li>
+			<li><a class="feed" href="{{ place.url }}feeds/">Custom RSS feeds</a></li>
+		</ul>
+	{% endifnotequal %}
+</div><!--/ #content -->
+{% endblock %}

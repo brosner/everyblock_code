@@ -1,0 +1,50 @@
+{% load eb %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+<title>{% block fulltitle %}{% block title %}{% endblock %} | {% block city_title %}EBPUB{% endblock %}{% endblock %}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="robots" content="noarchive">
+<link rel="home" title="Home" href="/">
+<!-- Some Javascript within requires jQuery. Linking to Google-hosted version here. You can download it from jquery.com -->
+<script src="http://jqueryjs.googlecode.com/files/jquery-1.3.2.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+var $j = jQuery.noConflict();
+</script>
+{% block extrahead %}{% endblock %}
+</head>
+<body>
+	<div id="header">
+		<h1><a href="/">EBPUB {% METRO_NAME %}</a></h1>
+		<div id="globalnav">
+			<ul>
+				<li><a href="/news/">News</a></li>
+				<li><a href="/locations/">Locations</a></li>
+			</ul>
+			{% with "Address, ZIP or neighborhood" as placeholder %}
+			<form action="/search/" id="globalsearch" onsubmit="if ($j('#searchinput').val() == '{{ placeholder }}') return false; return true;">
+				<p>
+					<label for="searchinput">Find a location:</label>
+					<input type="text" id="searchinput" name="q" value="{{ placeholder }}" onfocus="if (this.value == '{{ placeholder }}') { this.value = ''; }" onblur="if (this.value == '') { this.value = '{{ placeholder }}'; }">
+					<button type="submit">Go</button>
+				</p>
+			</form>
+			{% endwith %}
+		</div><!--/ #globalnav -->
+		{% block userlinks %}
+		<div id="userlinks">
+			{% if USER_EMAIL %}
+			<form action="/accounts/logout/" method="post">
+				<p>Logged in as <a href="/accounts/dashboard/">{{ USER_EMAIL }}</a>. <button type="submit">Log out</button></p>
+			</form>
+			{% else %}
+				<p><a href="/accounts/login/" rel="nofollow">Sign in</a> or <a href="/accounts/register/" rel="nofollow">register</a> for extra features.</p>
+			{% endif %}
+		</div><!--/ #userlinks -->
+		{% endblock %}
+	</div><!-- / #header -->
+	<div id="main">
+		{% block content %}{% endblock %}
+	</div><!-- / #main -->
+</body>
+</html>

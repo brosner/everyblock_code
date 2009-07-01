@@ -1,0 +1,25 @@
+{% load eb %}{% autoescape off %}
+{% if newsitem_list %}{% regroup newsitem_list by schema as schema_list %}{% for schema in schema_list %}{{ schema.grouper.plural_name|upper }}
+{% for newsitem in schema.list %}
+{{ newsitem.title }}
+Location: {{ newsitem.location_name }}
+{{ newsitem.schema.date_name|capfirst }}: {{ newsitem.item_date|date:"F j, Y" }}
+{% if newsitem.description %}{{ newsitem.description }}
+{% endif %}{{ newsitem.item_url_with_domain }}
+{% endfor %}
+{% endfor %}{% else %}   No news nearby.
+{% endif %}
+Check the latest news around {{ place_name }} at this page:
+
+http://{{ domain }}{{ place_url }}
+
+---------------------------------------------------------------------
+
+You've signed up to receive {% ifequal frequency 7 %}weekly{% else %}daily{% endifequal %} e-mails for {{ place_name }} in {% METRO_NAME %} at {{ email_address }}. To unsubscribe, just click this link:
+
+http://{{ domain }}{{ unsubscribe_url }}
+
+(When you click the link, you'll need to enter your password. If you don't remember it, or you haven't created one, just click the link on that page to send you a new password.)
+
+---------------------------------------------------------------------
+{% endautoescape %}

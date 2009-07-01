@@ -1,0 +1,38 @@
+#!/bin/sh
+# Start/stop the updaterdaemon. This is copied largely from the cron init script.
+#
+### BEGIN INIT INFO
+# Provides:          updaterdaemon
+# Required-Start:    $syslog $time
+# Required-Stop:     $syslog $time
+# Default-Start:     2 3 4 5
+# Default-Stop:      S 0 1 6
+# Short-Description: Regular background program processing daemon
+# Description:       updaterdaemon is a Python cron replacement.
+
+### END INIT INFO
+
+#LSBNAMES='-l'  # Uncomment for LSB name support in /etc/cron.d/
+
+. /lib/lsb/init-functions
+
+RUNNER="python /home/code/ebdata/retrieval/updaterdaemon/runner.py"
+
+case "$1" in
+start)	log_begin_msg "Starting updaterdaemon..."
+        sudo -u everycron $RUNNER start
+        log_end_msg $?
+	;;
+stop)	log_begin_msg "Stopping updaterdaemon..."
+        sudo -u everycron $RUNNER stop
+        log_end_msg $?
+        ;;
+restart) log_begin_msg "Restarting updaterdaemon..."
+        sudo -u everycron $RUNNER restart
+        log_end_msg $?
+        ;;
+*)	log_success_msg "Usage: /etc/init.d/updaterdaemon start|stop|restart"
+        exit 1 
+        ;;
+esac
+exit 0

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load eb mapping %}
+
+{% comment %}
+Base template for all "place" pages -- either block or location.
+Implements only the "top" of the page -- the title and "Nearby" list.
+
+Required variables: nearby_locations, place, is_block
+{% endcomment %}
+
+{% block content %}
+	<div id="contentheader">
+		<p>
+			{% block breadcrumbs %}
+			{% get_metro %}
+			{% if is_block %}
+				<a href="/streets/">Streets</a>
+				{% if METRO.multiple_cities %}  / <a href="/streets/{{ place.city_object.slug }}/">{{ place.city_object.name }}</a>{% endif %}
+				 / <a href="{{ place.street_url }}">{{ place.street_pretty_name }}</a>
+			{% else %}
+				<a href="{{ place.location_type.url }}">{{ place.location_type.plural_name|capfirst }}</a>
+			{% endif %}
+			 / <a href="{{ place.url }}">{{ place.pretty_name }}</a>
+			{% endblock %}
+		</p>
+		<h1>{% block header %}{% endblock %}</h1>
+		{% if nearby_locations %}
+		  <h2>Nearby locations</h2>
+			<ul>
+				{% for location in nearby_locations %}
+					<li><a id="location-{{ location.id }}" href="{{ location.url }}">{{ location.name }}</a></li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	</div><!--/ #contentheader -->
+	{% block place_content %}{% endblock %}
+{% endblock %}

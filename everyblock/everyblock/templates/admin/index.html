@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+
+{% load eb %}
+
+{% block title %}{% METRO_NAME %}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h1>{% METRO_NAME %}</h1>
+
+	<ul>
+		<li><a href="sources/">Sources</a> | <a href="sources/add/">Add</a></li>
+		<li><a href="schemas/">Schemas</a></li>
+		<li><a href="schemafields/">Schema fields</a></li>
+		<li><a href="scraper-history/">Scraper history</a></li>
+		<li><a href="geocoder-success-rates/">Geocoder success rates</a></li>
+		<li><a href="set-staff-cookie/">Set staff cookie</a> (will autoredirect back to this page)</li>
+	</ul>
+
+</div><!--/content-->
+{% endblock %}

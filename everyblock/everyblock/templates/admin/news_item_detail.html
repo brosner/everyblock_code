@@ -1,0 +1,36 @@
+{% extends "admin/base.html" %}
+
+{% load eb %}
+
+{% block title %}{% METRO_NAME %}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h1>{{ news_item }}</h1>
+
+  <h2>Values</h2>
+  <table>
+    <tr><th>schema</th><td>{{ news_item.schema }}</th></tr>
+    <tr><th>title</th><td>{{ news_item.title }}</th></tr>
+    <tr><th>description</th><td>{{ news_item.description }}</th></tr>
+    <tr><th>pub_date</th><td>{{ news_item.pub_date }}</th></tr>
+    <tr><th>item_date</th><td>{{ news_item.item_date }}</th></tr>
+    <!--<tr><th>location</th><td>{{ news_item.location }}</th></tr>-->
+    <tr><th>location_name</th><td>{{ news_item.location_name }}</th></tr>
+    <tr><th>location_object</th><td>{{ news_item.location_object }}</th></tr>
+  </table>
+
+  <h2>Attributes</h2>
+  <table>
+  {% for attribute in attributes %}
+    <tr>
+      <th>{{ attribute.name }}</th>
+      <td>{{ attribute.real_name }}</th>
+      <td>{{ attribute.raw_value }}</th>
+    </tr>
+  {% endfor %}
+  </table>
+
+
+</div><!--/content-->
+{% endblock %}

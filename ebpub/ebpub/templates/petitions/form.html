@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load eb %}
+
+{% block title %}Petition for {% METRO_NAME %} {{ petition.full_data_name }} data{% endblock %}
+
+{% block content %}
+<div id="content">
+	{% if is_schema %}<p><a href="../">{{ petition.schema.name|capfirst }}</a></p>{% endif %}
+	<h1>Petition for {% METRO_NAME %} {{ petition.full_data_name }} data</h1>
+	{% if form.errors %}<p><strong>Please correct the error{{ form.errors|pluralize }} below in order for us to accept your petition.</strong></p>{% endif %}
+	<blockquote>{{ petition.petition|safe|linebreaks }}</blockquote>
+	<h2>Sign here</h2>
+	<form action="." method="post">
+  	<table>
+  		<tr><th>Your name:</th><td>{{ form.name.errors }}{{ form.name }}</td></tr>
+  		<tr><th>Location:</th><td>{{ form.location.errors }}{{ form.location }}</td></tr>
+  		<tr><th>City:</th><td>{{ form.city.errors }}{{ form.city }}</td></tr>
+  		<tr><th>State:</th><td>{{ form.state.errors }}{{ form.state }}</td></tr>
+  		<tr><th>E-mail address:</th><td>{{ form.email.errors }}{{ form.email }}</td></tr>
+  		<tr><th>Optional notes:</th><td>{{ form.notes.errors }}{{ form.notes }}</td></tr>
+  		<tr>
+  			<th>&nbsp;</th>
+  			<td>
+  				<button type="submit">Sign the petition</button>
+  			</td>
+  		</tr>
+  	</table>
+  </form>
+</div><!--/content-->
+{% endblock %}

@@ -1,0 +1,11 @@
+{% load eb %}
+
+{% if obj.2.can_collapse %}
+	{% if obj.2.is_special_report %}
+		Special report: {{ obj.2.name }}
+	{% else %}
+		{{ obj.3|length }} {% schema_plural_name obj.2 obj.3 %} new on {{ obj.3.0.pub_date|date:"F j" }}
+	{% endif %}
+{% else %}
+	{{ obj.2.name|capfirst }}: {{ obj.3.title }}
+{% endif %}

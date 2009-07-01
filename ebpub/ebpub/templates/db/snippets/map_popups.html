@@ -1,0 +1,18 @@
+{# This snippet requires a variable called newsitem_list #}
+
+{% load eb %}
+
+<div style="display: none;">
+{% for newsitem in newsitem_list %}
+	<div class="popup" id="popup-ni-{{ newsitem.id }}">
+		<div class="poplabel maplabel bottomheader paginated">
+			<h2 class="labelheader">{{ newsitem.schema.name|capfirst }}</h2>
+			<div class="labelwrap">
+				<ul class="newsitemlist">
+					{% newsitem_list_by_schema newsitem ungrouped %}
+				</ul>
+			</div>
+		</div>
+	</div>
+{% endfor %}
+</div>

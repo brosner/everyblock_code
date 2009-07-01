@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Log in{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h1>Log into your account</h1>
+	{% if custom_message %}
+		<p>{{ custom_message }}</p>
+	{% endif %}
+	<form action="/accounts/login/" method="post">
+		{{ form.non_field_errors }}
+		<table>
+			<tr>
+				<th><label for="id_email">E-mail address:</label></th>
+				<td>{{ form.email.errors }}{{ form.email }}</td>
+			</tr>
+			<tr>
+				<th><label for="id_password">Password:</label></th>
+				<td>{{ form.password.errors }}{{ form.password }} <span><a href="/accounts/password-change/">Forgot password</a></span></td>
+			</tr>
+			<tr>
+				<th>&nbsp;</th>
+				<td>
+					<button type="submit">Log in</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+	<p><a href="../register/">Create account</a></p>
+</div><!--/ #content -->
+{% endblock %}

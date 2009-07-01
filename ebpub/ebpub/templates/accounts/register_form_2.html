@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Set a password{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h1>Create an account</h1>
+	<h2>Step 2: Set a password</h2>
+	<form action="" method="post">
+		{{ form.e.errors }}
+		{{ form.e }}{{ form.h }}
+		<table>
+			<tr>
+				<th><label for="id_password1">Password:</label></th>
+				<td>{{ form.password1.errors }}{{ form.password1 }}</td>
+			</tr>
+			<tr>
+				<th><label for="id_password2">Password (again):</label></th>
+				<td>{{ form.password2.errors }}{{ form.password2 }}</td>
+			</tr>
+			<tr>
+				<th>&nbsp;</th>
+				<td>
+					<button type="submit">Create your account</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+{% endblock %}

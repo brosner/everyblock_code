@@ -1,0 +1,32 @@
+{% extends "wiki/base.html" %}
+
+{% load wiki %}
+
+{% block title %}{{ city.name }} data feeds{% endblock %}
+
+{% block content %}
+
+<h1><a href="../../">Data feeds</a> / {{ city.name }}</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Data type</th>
+            <th>PP status</th>
+            <th>Tech status</th>
+            <th>Next step</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for data_source in data_source_list %}
+        <tr{% if data_source.is_na %} style="background: #eee;"{% endif %}>
+            <th><a href="{{ data_source.url }}">{{ data_source.data_type.name }}</a></th>
+            <td>{{ data_source.get_pp_status_display }}</td>
+            <td>{{ data_source.get_tech_status_display }}</td>
+            <td>{{ data_source.next_step|markdown|safe }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

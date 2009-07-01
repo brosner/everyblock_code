@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Search: {{ query }}{% endblock %}
+
+{% block content %}
+<div id="content">
+	<h1>Address search</h1>
+	<form action="/search/" method="get">
+		<input type="text" name="q" value="{{ query }}"> <input type="submit" value="Search again">
+	</form>
+	<h2>Did you mean&hellip;</h2>
+	<ul>
+	{% for choice in choices %}
+		<li><a href="{{ choice.url }}">{{ choice }}</a></li>
+	{% endfor %}
+	</ul>
+</div><!--/content-->
+{% endblock %}

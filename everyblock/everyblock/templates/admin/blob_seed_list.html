@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+
+{% load eb %}
+
+{% block title %}Sources{% endblock %}
+
+{% block content %}
+<div id="content">
+	<p><a href="../">{% METRO_NAME %} admin</a></p>
+
+	<h1>Sources</h1>
+
+	<p><a href="add/">Add one</a></p>
+
+	{% regroup seed_list by autodetect_locations as autodetect_list %}
+
+	{% for autodetect in autodetect_list %}
+		{% regroup autodetect.list by pretty_name as name_list %}
+
+		<table>
+			<tr><th>Name</th><th>URL</th><th>Guess article text</th><th>Strip noise</th><th>RSS full entry</th></tr>
+		{% for name in name_list %}
+			<tr>
+				<td>{{ name.grouper }}</td>
+				<td>{% for seed in name.list %}#{{ seed.id }} {% if not seed.is_active %}(INACTIVE) {% endif %}-- <a href="{{ seed.url }}">{{ seed.url }}</a>{% if seed.city %} (Default city: {{ seed.city }}){% endif %}<br>{% endfor %}</td>
+				<td>{% for seed in name.list %}{{ seed.guess_article_text }}<br>{% endfor %}</td>
+				<td>{% for seed in name.list %}{{ seed.strip_noise }}<br>{% endfor %}</td>
+				<td>{% for seed in name.list %}{{ seed.rss_full_entry }}<br>{% endfor %}</td>
+			</tr>
+		{% endfor %}
+		</table>
+	{% endfor %}
+
+</div><!--/content-->
+{% endblock %}

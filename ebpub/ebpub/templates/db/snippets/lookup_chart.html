@@ -1,0 +1,29 @@
+{# This snippet requires these variables: schema, lookup, total_count #}
+
+{% load humanize %}
+
+<p>The <strong>top {{ lookup.top_values|length }} {{ lookup.sf.pretty_name_plural }}</strong> around this area since <strong>{{ schema.min_date|date:"F j, Y" }}</strong>, are:</p>
+
+<table>
+	{% for value in lookup.top_values %}
+	<tr>
+		<td class="label">
+			<span class="name">
+				<a href="{{ schema.url }}{{ filter_url }}by-{{ lookup.sf.slug }}/{{ value.lookup.slug }}/" title="{{ value.lookup.name }}">{{ value.lookup.name }}</a>
+				{% if value.count %}<span class="bar" style="width: {% widthratio value.count total_count 100 %}%"></span>{% endif %}
+			</span>
+		</td>
+		<td class="count">
+			{{ value.count|intcomma }}
+		</td>
+		<td class="percent">
+			{% widthratio value.count total_count 100 %}%
+		</td>
+	</tr>
+	{% endfor %}
+	<tr>
+		<td colspan="3">
+			<a href="{{ schema.url }}{{ filter_url }}by-{{ lookup.sf.slug }}/">See all {{ lookup.sf.pretty_name_plural }}&hellip;</a>
+		</td>
+	</tr>
+</table>
